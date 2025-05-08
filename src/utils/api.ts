@@ -1,5 +1,5 @@
 // API基础URL
-const API_BASE_URL = 'http://81.68.194.175:8090';
+const API_BASE_URL = 'https://pod.goalachieveapp.com';
 
 // NFT市场列表项类型
 export interface NFTListItem {

@@ -161,7 +161,7 @@ export default function NFTDetailPage() {
   // 下载音频
   const handleDownload = () => {
     if (!nft?.audioUrl) return;
-    const url = nft.audioUrl.startsWith('http') ? nft.audioUrl : `http://81.68.194.175:8090${nft.audioUrl}`;
+    const url = nft.audioUrl.startsWith('http') ? nft.audioUrl : `https://pod.goalachieveapp.com${nft.audioUrl}`;
     const a = document.createElement('a');
     a.href = url;
     a.download = `${nft.podcastName || 'podcast'}.mp3`;
@@ -292,7 +292,7 @@ export default function NFTDetailPage() {
                       {/* 隐藏原生 audio 控件，仅用于播放 */}
                       <audio
                         ref={audioRef}
-                        src={nft.audioUrl && (nft.audioUrl.startsWith('http') ? nft.audioUrl : `http://81.68.194.175:8090${nft.audioUrl}`)}
+                        src={nft.audioUrl && (nft.audioUrl.startsWith('http') ? nft.audioUrl : `https://pod.goalachieveapp.com${nft.audioUrl}`)}
                         style={{ display: 'none' }}
                       />
                     </div>
