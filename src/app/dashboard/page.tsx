@@ -12,7 +12,7 @@ import {
 } from 'react-icons/fi'
 
 // 添加API基础URL常量
-const API_BASE_URL = 'https://5a43-125-121-70-2.ngrok-free.app'
+const API_BASE_URL = 'http://81.68.194.175:8090'
 
 // 首先定义状态常量
 const PODCAST_STATUS = {
@@ -193,7 +193,11 @@ export default function Dashboard() {
 
   // 拉取播客列表
   useEffect(() => {
-    fetch(`${API_BASE_URL}/api/v1/user-podcasts?uid=1`)
+    fetch(`${API_BASE_URL}/api/v1/user-podcasts?uid=1`, {
+      headers: {
+        'ngrok-skip-browser-warning': "69420"
+      }
+    })
       .then(res => res.json())
       .then(data => {
         if (data && data.success && Array.isArray(data.data)) {
