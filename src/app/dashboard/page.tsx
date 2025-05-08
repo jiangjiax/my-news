@@ -116,7 +116,7 @@ const ScriptEditor = ({
                   ...newContents[index],
                   content: e.target.value
                 };
-                setScriptContent({ contents: newContents });
+                onContentChange({ contents: newContents });
                 saveScriptContent({ contents: newContents });
               }}
               className="w-full px-4 py-2 border border-blue-700/40 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/40 text-blue-100 bg-gray-900/60 font-mono text-sm resize-none hover:border-blue-500/40 transition-all"
@@ -1277,7 +1277,7 @@ export default function Dashboard() {
                                         ...newContents[index],
                                         content: e.target.value
                                       };
-                                      setScriptContent({ contents: newContents });
+                                      onContentChange({ contents: newContents });
                                       saveScriptContent({ contents: newContents });
                                     }}
                                     className="w-full px-4 py-2 border border-blue-700/40 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/40 text-blue-100 bg-gray-900/60 font-mono text-sm resize-none hover:border-blue-500/40 transition-all"
