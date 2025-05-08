@@ -23,4 +23,125 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+  @apply bg-gray-900 text-gray-100;
+}
+
+@tailwind utilities;
+
+.prose h1 {
+  @apply text-2xl font-bold mt-6 mb-4 text-gray-900;
+}
+
+.prose h2 {
+  @apply text-xl font-semibold mt-6 mb-3 text-gray-800;
+}
+
+.prose h3 {
+  @apply text-lg font-medium mt-5 mb-2 text-gray-800;
+}
+
+.prose p {
+  @apply text-gray-700 leading-relaxed my-3;
+}
+
+.prose ul {
+  @apply list-disc pl-5 my-4;
+}
+
+.prose li {
+  @apply mb-1;
+}
+
+/* 添加自定义动画 */
+@keyframes typing {
+  from { width: 0 }
+  to { width: 100% }
+}
+
+.animate-typing {
+  overflow: hidden;
+  white-space: nowrap;
+  animation: typing 3.5s steps(40, end);
+}
+
+@keyframes typing1 { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-5px); } }
+@keyframes typing2 { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-5px); } }
+@keyframes typing3 { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-5px); } }
+
+.animate-typing1 { animation: typing1 1s infinite 0s; }
+.animate-typing2 { animation: typing2 1s infinite 0.2s; }
+.animate-typing3 { animation: typing3 1s infinite 0.4s; }
+
+.animate-fadeIn {
+  animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animation-delay-2000 {
+  animation-delay: 2s;
+}
+
+.animation-delay-4000 {
+  animation-delay: 4s;
+}
+
+/* 动态颜色类支持 */
+.bg-blue-900\/30 { background-color: rgba(30, 58, 138, 0.3); }
+.bg-purple-900\/30 { background-color: rgba(76, 29, 149, 0.3); }
+.bg-cyan-900\/30 { background-color: rgba(22, 78, 99, 0.3); }
+.bg-emerald-900\/30 { background-color: rgba(6, 78, 59, 0.3); }
+
+.border-blue-900\/30 { border-color: rgba(30, 58, 138, 0.3); }
+.border-purple-900\/30 { border-color: rgba(76, 29, 149, 0.3); }
+.border-cyan-900\/30 { border-color: rgba(22, 78, 99, 0.3); }
+.border-emerald-900\/30 { border-color: rgba(6, 78, 59, 0.3); }
+
+.bg-blue-900\/50 { background-color: rgba(30, 58, 138, 0.5); }
+.bg-purple-900\/50 { background-color: rgba(76, 29, 149, 0.5); }
+.bg-cyan-900\/50 { background-color: rgba(22, 78, 99, 0.5); }
+.bg-emerald-900\/50 { background-color: rgba(6, 78, 59, 0.5); }
+
+.text-blue-400 { color: rgb(96, 165, 250); }
+.text-purple-400 { color: rgb(192, 132, 252); }
+.text-cyan-400 { color: rgb(34, 211, 238); }
+.text-emerald-400 { color: rgb(52, 211, 153); }
+
+.bg-blue-600 { background-color: rgb(37, 99, 235); }
+.bg-purple-600 { background-color: rgb(147, 51, 234); }
+.bg-cyan-600 { background-color: rgb(8, 145, 178); }
+.bg-emerald-600 { background-color: rgb(5, 150, 105); }
+
+.bg-blue-500 { background-color: rgb(59, 130, 246); }
+.bg-purple-500 { background-color: rgb(168, 85, 247); }
+.bg-cyan-500 { background-color: rgb(6, 182, 212); }
+.bg-emerald-500 { background-color: rgb(16, 185, 129); }
+
+/* 极简高级感 WalletMultiButton 样式 */
+.wallet-adapter-button,
+.wallet-adapter-button-trigger {
+  background: #181f2a !important;
+  color: #e0e7ef !important;
+  border-radius: 0.75rem !important;
+  font-weight: 600 !important;
+  font-size: 0.95rem !important;
+  padding: 0.22rem 0.9rem !important;
+  border: 1.5px solid #25335a !important;
+  box-shadow: none !important;
+  min-width: 80px !important;
+  transition: background 0.18s, border-color 0.18s, color 0.18s;
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.4rem !important;
+  justify-content: center !important;
+  outline: none !important;
+}
+.wallet-adapter-button:hover,
+.wallet-adapter-button-trigger:hover {
+  background: #232c3d !important;
+  border-color: #3b82f6 !important;
+  color: #fff !important;
 }
