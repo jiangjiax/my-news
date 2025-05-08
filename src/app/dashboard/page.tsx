@@ -4,12 +4,12 @@ import React, { useState, useEffect, useMemo, useRef } from 'react'
 import Header from '@/components/Header'
 import { Button } from '@/components/ui/Button'
 import { 
-  FiLink, FiUpload, FiSettings, FiPlay, FiPause,
-  FiDownload, FiCopy, FiHeadphones, FiFileText,
-  FiChevronLeft, FiChevronRight, FiInfo, FiMusic, FiBook, FiX, FiPlus,
-  FiClock, FiCheck, FiChevronDown, FiEdit2, FiCpu, FiBox, FiVolume2, FiVolumeX
+  FiLink, FiSettings, FiPlay, FiPause,
+  FiDownload, FiHeadphones, FiFileText,
+  FiChevronLeft, FiInfo, FiMusic, FiBook, FiX, 
+  FiClock, FiCheck, FiChevronDown, FiEdit2, FiCpu, 
+  FiVolume2, FiVolumeX
 } from 'react-icons/fi'
-import Link from 'next/link'
 
 // 添加API基础URL常量
 const API_BASE_URL = 'https://5a43-125-121-70-2.ngrok-free.app'
@@ -24,10 +24,6 @@ const PODCAST_STATUS = {
 // 然后在判断状态时使用数字
 const isPodcastGenerating = (status: number) => status === PODCAST_STATUS.GENERATING;
 const isPodcastCompleted = (status: number) => status === PODCAST_STATUS.COMPLETED;
-const isPodcastFailed = (status: number) => status === PODCAST_STATUS.FAILED;
-
-// 定义播客状态类型
-type PodcastStatus = 'generating' | 'completed' | 'failed'
 
 // 定义播客项类型
 interface PodcastHost {
@@ -60,82 +56,6 @@ interface ScriptLine {
 interface ScriptContent {
   contents: ScriptLine[];
 }
-
-// 添加一个新的组件用于脚本编辑
-const ScriptEditor = ({ 
-  scriptContent, 
-  onContentChange 
-}: { 
-  scriptContent: ScriptContent | null,
-  onContentChange: (newContent: ScriptContent) => void
-}) => {
-  const handleLineChange = (index: number, newContent: string) => {
-    if (!scriptContent) return;
-    
-    // 检查字数是否超过200字
-    if (newContent.length > 200) {
-      alert('每段对话不能超过200字');
-      return;
-    }
-    
-    const newContents = [...scriptContent.contents];
-    newContents[index] = {
-      ...newContents[index],
-      content: newContent
-    };
-    
-    onContentChange({
-      contents: newContents
-    });
-  };
-
-  return (
-    <div className="space-y-4">
-      {scriptContent?.contents.map((line, index) => (
-        <div key={index} className="flex flex-col gap-2">
-          {/* 主播名称深色背景 */}
-          <div className="flex items-center gap-3 px-5 py-3.5 bg-blue-900/40 border border-blue-700/40 rounded-xl">
-            <FiHeadphones className="w-5 h-5 text-blue-400" />
-            <div className="flex items-center gap-3 flex-1">
-              <span className="text-blue-300 font-medium">
-                {line.speakerName}
-              </span>
-              <span className="text-xs px-2 py-0.5 bg-blue-800/60 text-blue-200 rounded-md border border-blue-700/40">
-                主播
-              </span>
-            </div>
-          </div>
-          {/* 对话内容输入框深色风格 */}
-          <div className="relative">
-            <textarea
-              value={line.content}
-              onChange={e => {
-                if (e.target.value.length > 200) return;
-                const newContents = [...scriptContent.contents];
-                newContents[index] = {
-                  ...newContents[index],
-                  content: e.target.value
-                };
-                onContentChange({ contents: newContents });
-                saveScriptContent({ contents: newContents });
-              }}
-              className="w-full px-4 py-2 border border-blue-700/40 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/40 text-blue-100 bg-gray-900/60 font-mono text-sm resize-none hover:border-blue-500/40 transition-all"
-              rows={2}
-              placeholder="编辑对话内容..."
-              maxLength={200}
-            />
-            <div className="absolute top-2 right-2 text-blue-700/40">
-              <FiEdit2 className="w-4 h-4" />
-            </div>
-            <div className="absolute bottom-2 right-2 text-xs text-blue-700/40">
-              {line.content.length}/200
-            </div>
-          </div>
-        </div>
-      ))}
-    </div>
-  );
-};
 
 // 缓存相关常量和工具函数
 const CACHE_KEYS = {
@@ -170,16 +90,6 @@ const savePodcastConfig = (config: any) => {
 const saveScriptContent = (content: ScriptContent | null) => {
   if (typeof window !== 'undefined' && content) {
     localStorage.setItem(CACHE_KEYS.SCRIPT_CONTENT, JSON.stringify(content));
-  }
-}
-
-// 清除所有缓存
-const clearAllCache = () => {
-  if (typeof window !== 'undefined') {
-    localStorage.removeItem(CACHE_KEYS.CURRENT_STEP);
-    localStorage.removeItem(CACHE_KEYS.PODCAST_TYPE);
-    localStorage.removeItem(CACHE_KEYS.PODCAST_CONFIG);
-    localStorage.removeItem(CACHE_KEYS.SCRIPT_CONTENT);
   }
 }
 
@@ -1277,7 +1187,7 @@ export default function Dashboard() {
                                         ...newContents[index],
                                         content: e.target.value
                                       };
-                                      onContentChange({ contents: newContents });
+                                      setScriptContent({ contents: newContents });
                                       saveScriptContent({ contents: newContents });
                                     }}
                                     className="w-full px-4 py-2 border border-blue-700/40 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/40 text-blue-100 bg-gray-900/60 font-mono text-sm resize-none hover:border-blue-500/40 transition-all"

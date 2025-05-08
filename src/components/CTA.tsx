@@ -1,4 +1,4 @@
-import { FiArrowRight, FiCode, FiUsers, FiMic, FiBox } from 'react-icons/fi'
+import { FiArrowRight, FiUsers, FiMic, FiBox } from 'react-icons/fi'
 import Link from 'next/link'
 
 export default function CTA() {
