@@ -161,7 +161,7 @@ export default function NFTDetailPage() {
   // 下载音频
   const handleDownload = () => {
     if (!nft?.audioUrl) return;
-    const url = nft.audioUrl.startsWith('http') ? nft.audioUrl : `https://pod.goalachieveapp.com${nft.audioUrl}`;
+    const url = nft.audioUrl.startsWith('http') ? nft.audioUrl : `http://127.0.0.1:8090${nft.audioUrl}`;
     const a = document.createElement('a');
     a.href = url;
     a.download = `${nft.podcastName || 'podcast'}.mp3`;
@@ -197,109 +197,55 @@ export default function NFTDetailPage() {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
               {/* 左侧 - 播客封面和音频播放 */}
               <div className="lg:col-span-1">
-                <div className="bg-gray-800/40 backdrop-blur-sm rounded-2xl border border-gray-700/50 overflow-hidden">
-                  {/* 播客封面 */}
-                  <div className="h-64 bg-gradient-to-br from-blue-600/30 to-purple-600/30 flex items-center justify-center p-6">
-                    <div className="text-center">
-                      <div className="text-xl font-bold text-white mb-2">
-                        {nft.podcastName}
-                      </div>
-                      <div className="text-sm text-gray-300">
-                        {nft.episodeName}
+                <div className="bg-gradient-to-br from-gray-800/40 via-gray-900/40 to-gray-800/40 backdrop-blur-xl rounded-2xl border border-gray-700/30 overflow-hidden shadow-xl shadow-blue-900/10">
+                  {/* 播客封面 - 更现代的设计 */}
+                  <div className="relative h-72 overflow-hidden">
+                    {/* 背景渐变 */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-blue-600/20 via-purple-600/20 to-blue-900/20" />
+                    {/* 装饰性圆形 */}
+                    <div className="absolute -top-20 -right-20 w-40 h-40 rounded-full bg-blue-500/10 blur-2xl" />
+                    <div className="absolute -bottom-10 -left-10 w-32 h-32 rounded-full bg-purple-500/10 blur-2xl" />
+                    
+                    {/* 内容区域 */}
+                    <div className="relative h-full flex flex-col items-center justify-center p-8">
+                      <div className="text-center">
+                        <div className="inline-flex items-center px-4 py-1 rounded-full bg-white/5 border border-white/10 backdrop-blur-sm mb-4">
+                          <FiHeadphones className="w-4 h-4 text-blue-300 mr-2" />
+                          <span className="text-sm text-blue-200">播客</span>
+                        </div>
+                        <h2 className="text-2xl font-bold text-white mb-3 tracking-wide">
+                          {nft.podcastName}
+                        </h2>
+                        <div className="text-base text-gray-300/90 font-medium">
+                          {nft.episodeName}
+                        </div>
                       </div>
                     </div>
                   </div>
                   
-                  {/* 自定义音频播放器 */}
-                  <div className="p-6">
-                    <div className="flex flex-col items-center mb-4">
-                      <div className="flex items-center gap-4 mb-2">
-                        {/* 播放/暂停 */}
-                        <button
-                          onClick={handlePlayAudio}
-                          disabled={!nft.audioUrl}
-                          className={`w-14 h-14 rounded-full flex items-center justify-center 
-                            bg-gradient-to-br from-blue-600 to-purple-600 shadow-lg
-                            hover:from-blue-700 hover:to-purple-700 transition-all duration-200
-                            ${isPlaying ? 'ring-2 ring-purple-400/40' : ''}`}
-                        >
-                          {isPlaying ? (
-                            <FiPause className="w-7 h-7 text-white" />
-                          ) : (
-                            <FiPlay className="w-8 h-8 text-white" style={{ marginLeft: '5px' }} />
-                          )}
-                        </button>
-                        {/* 下载按钮 */}
-                        <button
-                          onClick={handleDownload}
-                          className="w-10 h-10 flex items-center justify-center rounded-full bg-gray-800/80 border border-gray-700/60 hover:bg-blue-900/40 hover:border-blue-600 transition-all duration-200"
-                          title="下载音频"
-                        >
-                          <FiDownload className="w-5 h-5 text-blue-300" />
-                        </button>
-                      </div>
-                      {/* 进度条 */}
-                      <div className="w-full mt-2">
-                        <input
-                          type="range"
-                          min={0}
-                          max={audioDuration || 0}
-                          step={0.01}
-                          value={audioProgress}
-                          onChange={handleSeek}
-                          className="w-full accent-blue-500"
-                          style={{
-                            background: 'linear-gradient(to right, #3b82f6 0%, #a78bfa 100%)',
-                            height: '4px',
-                            borderRadius: '2px',
-                            appearance: 'none',
-                          }}
-                        />
-                        <div className="flex justify-between text-xs text-gray-400 mt-1">
-                          <span>{formatTime(audioProgress)}</span>
-                          <span>{formatTime(audioDuration)}</span>
-                        </div>
-                      </div>
-                      {/* 音量控制 */}
-                      <div className="flex items-center gap-2 w-full mt-4">
-                        <button
-                          onClick={handleMute}
-                          className="p-2 rounded-full bg-gray-800/80 border border-gray-700/60 hover:bg-blue-900/40 hover:border-blue-600 transition-all duration-200"
-                          title={isMuted || volume === 0 ? "取消静音" : "静音"}
-                        >
-                          {isMuted || volume === 0 ? (
-                            <FiVolumeX className="w-5 h-5 text-blue-300" />
-                          ) : (
-                            <FiVolume2 className="w-5 h-5 text-blue-300" />
-                          )}
-                        </button>
-                        <input
-                          type="range"
-                          min={0}
-                          max={1}
-                          step={0.01}
-                          value={isMuted ? 0 : volume}
-                          onChange={handleVolumeChange}
-                          className="flex-1 accent-blue-500"
-                          style={{
-                            background: 'linear-gradient(to right, #3b82f6 0%, #a78bfa 100%)',
-                            height: '4px',
-                            borderRadius: '2px',
-                            appearance: 'none',
-                          }}
-                        />
-                      </div>
-                      {/* 隐藏原生 audio 控件，仅用于播放 */}
+                  {/* 音频播放区域 */}
+                  <div className="px-8 py-6 bg-gradient-to-b from-gray-900/50 to-gray-900/30">
+                    {nft.audioUrl ? (
                       <audio
                         ref={audioRef}
-                        src={nft.audioUrl && (nft.audioUrl.startsWith('http') ? nft.audioUrl : `https://pod.goalachieveapp.com${nft.audioUrl}`)}
-                        style={{ display: 'none' }}
+                        controls
+                        src={nft.audioUrl.startsWith('http') ? nft.audioUrl : `http://127.0.0.1:8090${nft.audioUrl}`}
+                        className="w-full dark-audio"
+                        style={{
+                          background: '#181e2a',
+                          borderRadius: '12px',
+                          colorScheme: 'dark',
+                        }}
                       />
-                    </div>
-                    <div className="mt-4">
-                      <div className="flex items-center justify-between text-sm text-gray-400 mb-2">
-                        <div className="flex items-center">
-                          <FiClock className="mr-1" />
+                    ) : (
+                      <div className="text-blue-300/80 text-center py-4">暂无音频</div>
+                    )}
+                    
+                    {/* 创建时间 - 更精致的样式 */}
+                    <div className="mt-4 flex items-center justify-center">
+                      <div className="px-4 py-2 rounded-full bg-blue-900/20 border border-blue-700/30 backdrop-blur-sm">
+                        <div className="flex items-center text-sm text-blue-300/90">
+                          <FiClock className="w-4 h-4 mr-2 text-blue-400/80" />
                           创建于 {formatDate(nft.createdAt)}
                         </div>
                       </div>

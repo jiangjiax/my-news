@@ -12,7 +12,7 @@ import {
 } from 'react-icons/fi'
 
 // 添加API基础URL常量
-const API_BASE_URL = 'https://pod.goalachieveapp.com'
+const API_BASE_URL = 'http://127.0.0.1:8090'
 
 // 首先定义状态常量
 const PODCAST_STATUS = {
@@ -1351,94 +1351,20 @@ export default function Dashboard() {
             </button>
             <h3 className="text-xl font-bold pt-6 pb-2 px-8 text-blue-200 text-center mb-2">播客脚本 & 音频</h3>
             {/* 音频播放器 */}
-            <div className="w-full flex flex-col items-center justify-center px-8">
+            <div className="w-full flex flex-col items-center justify-center px-8 mb-2">
               {showScript.audioUrl ? (
-                <div className="w-full max-w-md mx-auto bg-gradient-to-br from-gray-800/80 to-gray-900/80 rounded-2xl shadow-lg border border-gray-700/60 px-4 py-4 mb-4 flex flex-col items-center">
-                  {/* 播放/暂停 */}
-                  <button
-                    onClick={handlePlayAudio}
-                    disabled={!showScript.audioUrl}
-                    className={`w-12 h-12 rounded-full flex items-center justify-center
-                      bg-gradient-to-br from-blue-500 via-purple-500 to-blue-700 shadow-xl
-                      hover:scale-105 active:scale-95 transition-transform duration-200
-                      ${isPlaying ? 'ring-2 ring-purple-400/40' : ''}`}
-                    style={{ boxShadow: '0 2px 12px 0 rgba(80,60,200,0.12)' }}
-                  >
-                    {isPlaying ? (
-                      <FiPause className="w-6 h-6 text-white" />
-                    ) : (
-                      <FiPlay className="w-7 h-7 text-white" style={{ marginLeft: '5px' }} />
-                    )}
-                  </button>
-
-                  {/* 进度条与时间 */}
-                  <div className="w-full mt-4 flex flex-col gap-1">
-                    <input
-                      type="range"
-                      min={0}
-                      max={audioDuration || 0}
-                      step={0.01}
-                      value={audioProgress}
-                      onChange={handleSeek}
-                      className="w-full accent-blue-500"
-                      style={{
-                        background: 'linear-gradient(to right, #6366f1 0%, #a78bfa 100%)',
-                        height: '4px',
-                        borderRadius: '2px',
-                        appearance: 'none',
-                      }}
-                    />
-                    <div className="flex justify-between text-xs text-gray-400 font-mono">
-                      <span>{formatTime(audioProgress)}</span>
-                      <span>{formatTime(audioDuration)}</span>
-                    </div>
-                  </div>
-
-                  {/* 音量与下载 */}
-                  <div className="flex items-center gap-3 w-full mt-3">
-                    {/* 音量 */}
-                    <button
-                      onClick={handleMute}
-                      className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-800/80 border border-gray-700/60 hover:bg-blue-900/40 hover:border-blue-600 transition-all duration-200"
-                      title={isMuted || volume === 0 ? "取消静音" : "静音"}
-                    >
-                      {isMuted || volume === 0 ? (
-                        <FiVolumeX className="w-4 h-4 text-blue-300" />
-                      ) : (
-                        <FiVolume2 className="w-4 h-4 text-blue-300" />
-                      )}
-                    </button>
-                    <input
-                      type="range"
-                      min={0}
-                      max={1}
-                      step={0.01}
-                      value={isMuted ? 0 : volume}
-                      onChange={handleVolumeChange}
-                      className="flex-1 accent-blue-500"
-                      style={{
-                        background: 'linear-gradient(to right, #6366f1 0%, #a78bfa 100%)',
-                        height: '3px',
-                        borderRadius: '2px',
-                        appearance: 'none',
-                      }}
-                    />
-                    {/* 下载 */}
-                    <button
-                      onClick={handleDownload}
-                      className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-800/80 border border-gray-700/60 hover:bg-purple-900/40 hover:border-purple-600 transition-all duration-200"
-                      title="下载音频"
-                    >
-                      <FiDownload className="w-4 h-4 text-purple-300" />
-                    </button>
-                  </div>
-                  {/* 隐藏原生 audio 控件，仅用于播放 */}
-                  <audio
-                    ref={audioRef}
-                    src={showScript.audioUrl.startsWith('http') ? showScript.audioUrl : API_BASE_URL + showScript.audioUrl}
-                    style={{ display: 'none' }}
-                  />
-                </div>
+                <audio
+                  ref={audioRef}
+                  controls
+                  src={showScript.audioUrl.startsWith('http') ? showScript.audioUrl : API_BASE_URL + showScript.audioUrl}
+                  className="w-full dark-audio"
+                  style={{
+                    background: '#181e2a',
+                    borderRadius: '12px',
+                    colorScheme: 'dark',
+                    marginBottom: '0.5rem'
+                  }}
+                />
               ) : (
                 <div className="text-blue-300 mb-4">暂无音频</div>
               )}
