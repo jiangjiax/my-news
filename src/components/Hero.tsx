@@ -20,7 +20,7 @@ export default function Hero() {
       </div>
       <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-8 flex flex-col items-center">
         {/* 主标题 */}
-        <h1 className="text-center font-serif font-black tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-blue-300 via-purple-300 to-blue-100 text-5xl sm:text-6xl md:text-7xl leading-[1.08] mb-6 drop-shadow-xl select-none">
+        <h1 className="text-center font-serif font-black tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-blue-300 via-purple-300 to-blue-100 text-5xl sm:text-6xl md:text-7xl leading-[1.08] mb-6 drop-shadow-xl select-none pb-1">
           Create. Own. Everything.
         </h1>
         <h2 className="text-center text-2xl sm:text-3xl md:text-4xl font-serif font-extrabold tracking-widest
