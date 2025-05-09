@@ -940,6 +940,10 @@ export default function Dashboard() {
                           value={webLink}
                           onChange={(e) => setWebLink(e.target.value)}
                         />
+                        {/* 新增反爬虫平台提醒 */}
+                        <div className="text-xs text-yellow-400 mt-1">
+                          若平台（如x.com）有反爬虫机制，内容将无法自动获取，请手动粘贴文本到下方输入框。<br />
+                        </div>
                         <div className="text-center text-xs sm:text-sm text-green-400 my-1 sm:my-2">或</div>
                         <textarea
                           placeholder="输入自定义文本内容"
