@@ -12,7 +12,7 @@ import {
 } from 'react-icons/fi'
 
 // 添加API基础URL常量
-const API_BASE_URL = 'https://pod.goalachieveapp.com'
+const API_BASE_URL = 'https://podx.goalachieveapp.com/'
 
 // 首先定义状态常量
 const PODCAST_STATUS = {
