@@ -624,8 +624,6 @@ export default function Dashboard() {
                 // 使用 ref 来收集内容片段
                 contentPartsRef.current.push(data);
                 
-                // 用于调试
-                console.log("收到content事件:", data);
                 break;
               
               case 'complete':
