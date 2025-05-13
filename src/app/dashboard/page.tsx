@@ -11,21 +11,21 @@ import {
   FiVolume2, FiVolumeX
 } from 'react-icons/fi'
 
-// 添加API基础URL常量
-const API_BASE_URL = 'https://podx.goalachieveapp.com'
+// Add API base URL constant
+const API_BASE_URL = 'http://127.0.0.1:8090'
 
-// 首先定义状态常量
+// First define status constants
 const PODCAST_STATUS = {
   GENERATING: 0,
   COMPLETED: 1,
   FAILED: 2
 } as const;
 
-// 然后在判断状态时使用数字
+// Then use numbers when determining status
 const isPodcastGenerating = (status: number) => status === PODCAST_STATUS.GENERATING;
 const isPodcastCompleted = (status: number) => status === PODCAST_STATUS.COMPLETED;
 
-// 定义播客项类型
+// Define podcast item types
 interface PodcastHost {
   name: string
   voice: string
@@ -47,7 +47,7 @@ interface PodcastItem {
   nftPrice: string
 }
 
-// 添加适当的接口定义
+// Add appropriate interface definitions
 interface ScriptLine {
   speakerName: string;
   content: string;
@@ -57,7 +57,7 @@ interface ScriptContent {
   contents: ScriptLine[];
 }
 
-// 缓存相关常量和工具函数
+// Cache-related constants and utility functions
 const CACHE_KEYS = {
   CURRENT_STEP: 'mynews_current_step',
   PODCAST_TYPE: 'mynews_podcast_type',
@@ -65,28 +65,28 @@ const CACHE_KEYS = {
   SCRIPT_CONTENT: 'mynews_script_content',
 }
 
-// 保存当前步骤到缓存
+// Save current step to cache
 const saveCurrentStep = (step: number) => {
   if (typeof window !== 'undefined') {
     localStorage.setItem(CACHE_KEYS.CURRENT_STEP, step.toString());
   }
 }
 
-// 保存播客类型到缓存
+// Save podcast type to cache
 const savePodcastType = (type: number) => {
   if (typeof window !== 'undefined') {
     localStorage.setItem(CACHE_KEYS.PODCAST_TYPE, type.toString());
   }
 }
 
-// 保存播客配置到缓存
+// Save podcast configuration to cache
 const savePodcastConfig = (config: any) => {
   if (typeof window !== 'undefined') {
     localStorage.setItem(CACHE_KEYS.PODCAST_CONFIG, JSON.stringify(config));
   }
 }
 
-// 保存脚本内容到缓存
+// Save script content to cache
 const saveScriptContent = (content: ScriptContent | null) => {
   if (typeof window !== 'undefined' && content) {
     localStorage.setItem(CACHE_KEYS.SCRIPT_CONTENT, JSON.stringify(content));
@@ -94,64 +94,64 @@ const saveScriptContent = (content: ScriptContent | null) => {
 }
 
 export default function Dashboard() {
-  // 状态管理
+  // State management
   const [step, setStep] = useState<number>(1)
-  const [podcastType, setPodcastType] = useState<number>(2)  // 默认为资讯谈话类型
+  const [podcastType, setPodcastType] = useState<number>(2)  // Default to news/talk type
   const [webLink, setWebLink] = useState<string>('')
   const [customText, setCustomText] = useState<string>('')
   const [customTextError, setCustomTextError] = useState<string>('')
   const [generatedScript, setGeneratedScript] = useState<string>('')
   const [isGenerating, setIsGenerating] = useState<boolean>(false)
   const [isPlaying, setIsPlaying] = useState<boolean>(false)
-  const [selectedVoice, setSelectedVoice] = useState<string>('专业男声')
+  const [selectedVoice, setSelectedVoice] = useState<string>('Professional Male Voice')
   const [error, setError] = useState<string>('')
   const [podcastName, setPodcastName] = useState<string>('')
   const [episodeName, setEpisodeName] = useState<string>('')
   const [duration, setDuration] = useState<number>(5)
   const [hostCount, setHostCount] = useState<number>(1)
-  const [host1Name, setHost1Name] = useState<string>('主播1')
-  const [host2Name, setHost2Name] = useState<string>('主播2')
+  const [host1Name, setHost1Name] = useState<string>('Host 1')
+  const [host2Name, setHost2Name] = useState<string>('Host 2')
   const [voiceOptions, setVoiceOptions] = useState<{ name: string, voiceType: string }[]>([])
   const [host1Voice, setHost1Voice] = useState<string>('')
   const [host2Voice, setHost2Voice] = useState<string>('')
 
-  // 添加播客列表状态
+  // Add podcast list state
   const [podcasts, setPodcasts] = useState<PodcastItem[]>([])
   const [showScript, setShowScript] = useState<PodcastItem | null>(null)
 
-  // 在 Dashboard 组件内添加新的状态
+  // Add new states in Dashboard component
   const [showVoiceModal1, setShowVoiceModal1] = useState(false)
   const [showVoiceModal2, setShowVoiceModal2] = useState(false)
 
-  // 添加脚本编辑状态
+  // Add script editing states
   const [editableScript, setEditableScript] = useState<string>('')
   const [isGeneratingScript, setIsGeneratingScript] = useState<boolean>(false)
   const [scriptContent, setScriptContent] = useState<ScriptContent | null>(null)
   const [scriptChunks, setScriptChunks] = useState<string[]>([])
   const [scriptProgress, setScriptProgress] = useState<number>(0)
 
-  // 在组件顶部添加一个状态
+  // Add a state at the top of the component
   const [completeScriptJson, setCompleteScriptJson] = useState<string>('');
 
-  // 在组件顶部添加一个状态，用于调试
+  // Add a state at the top of the component for debugging
   const [debugContent, setDebugContent] = useState<string>('');
 
-  // 在组件顶部添加一个 ref 来存储内容片段
+  // Add a ref at the top of the component to store content fragments
   const contentPartsRef = useRef<string[]>([]);
 
-  // 在状态管理部分添加新的状态
+  // Add new states in the state management section
   const [nftSupply, setNftSupply] = useState<number>(0)
   const [nftPrice, setNftPrice] = useState<number>(0)
   const [showNote, setShowNote] = useState<string>('')
 
-  // 在组件顶部添加一个新的 ref 来存储音频元素
+  // Add a new ref at the top of the component to store the audio element
   const audioRef = useRef<HTMLAudioElement>(null);
   const [audioProgress, setAudioProgress] = useState(0);
   const [audioDuration, setAudioDuration] = useState(0);
   const [volume, setVolume] = useState(1);
   const [isMuted, setIsMuted] = useState(false);
 
-  // 将音色选项按场景分组
+  // Group voice options by scene
   const groupedVoices = useMemo(() => {
     const groups: { [key: string]: { name: string, voiceType: string }[] } = {}
     voiceOptions.forEach(voice => {
@@ -167,21 +167,21 @@ export default function Dashboard() {
     return groups
   }, [voiceOptions])
 
-  // 拉取音色列表
+  // Fetch voice list
   useEffect(() => {
     fetch(`${API_BASE_URL}/api/v1/volcengine-voices`)
       .then(res => res.json())
       .then(data => {
-        // 假设返回格式为 { success: true, data: [{scene, voices: [{name, voiceType}]}] }
+        // Assuming the return format is { success: true, data: [{scene, voices: [{name, voiceType}]}] }
         if (data && data.data) {
-          // 扁平化所有音色
+          // Flatten all voices
           const allVoices = data.data.flatMap((group: any) => group.voices.map((v: any) => ({
             name: `${group.scene} - ${v.name}`,
             voiceType: v.voice_type
           })))
           console.log(allVoices)
           setVoiceOptions(allVoices)
-          // 默认选择第一个音色
+          // Select the first voice by default
           if (allVoices.length > 0) {
             setHost1Voice(allVoices[0].voiceType)
             setHost2Voice(allVoices[0].voiceType)
@@ -191,30 +191,30 @@ export default function Dashboard() {
       .catch(() => {})
   }, [])
 
-  // 拉取播客列表
+  // Fetch podcast list
   useEffect(() => {
     fetch(`${API_BASE_URL}/api/v1/user-podcasts?uid=1`)
       .then(res => res.json())
       .then(data => {
         if (data && data.success && Array.isArray(data.data)) {
-          // 字段映射
+          // Field mapping
           const mapped = data.data.map((item: any) => {
-            // 合成 script 字符串
+            // Combine script string
             let scriptText = '';
             if (item.script && item.script.contents) {
               scriptText = item.script.contents.map((c: any) => `${c.speakerName}: ${c.content}`).join('\n');
             }
             return {
-              id: item.id, // 若无id用episode_name
-              podcastName: item.podcast_name, // 后端没返回，留空或补充
+              id: item.id, // If no id, use episode_name
+              podcastName: item.podcast_name, // If not returned from backend, leave empty or supplement
               episodeName: item.episode_name,
-              podcastType: 2, // 后端没返回，默认2
-              status: item.status, // 后端没返回，默认1
-              createdAt: item.created_at, // 直接使用接口返回的 created_at
-              hosts: [], // 后端没返回，留空
+              podcastType: 2, // Default to 2 if not returned from backend
+              status: item.status, // Default to 1 if not returned from backend
+              createdAt: item.created_at, // Use created_at directly from API response
+              hosts: [], // Leave empty if not returned from backend
               script: scriptText,
               audioUrl: item.audio_url,
-              duration: 0, // 后端没返回
+              duration: 0, // Not returned from backend
             }
           });
           setPodcasts(mapped);
@@ -223,22 +223,22 @@ export default function Dashboard() {
       .catch(() => {})
   }, [])
 
-  // 在组件加载时从缓存恢复状态
+  // Restore state from cache when component loads
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      // 恢复当前步骤
+      // Restore current step
       const cachedStep = localStorage.getItem(CACHE_KEYS.CURRENT_STEP);
       if (cachedStep) {
         setStep(parseInt(cachedStep, 10));
       }
       
-      // 恢复播客类型
+      // Restore podcast type
       const cachedType = localStorage.getItem(CACHE_KEYS.PODCAST_TYPE);
       if (cachedType) {
         setPodcastType(parseInt(cachedType, 10));
       }
       
-      // 恢复播客配置
+      // Restore podcast configuration
       const cachedConfig = localStorage.getItem(CACHE_KEYS.PODCAST_CONFIG);
       if (cachedConfig) {
         try {
@@ -247,18 +247,18 @@ export default function Dashboard() {
           setEpisodeName(config.episodeName || '');
           setDuration(config.duration || 5);
           setHostCount(config.hostCount || 1);
-          setHost1Name(config.host1Name || '主播1');
-          setHost2Name(config.host2Name || '主播2');
+          setHost1Name(config.host1Name || 'Host 1');
+          setHost2Name(config.host2Name || 'Host 2');
           setHost1Voice(config.host1Voice || '');
           setHost2Voice(config.host2Voice || '');
           setWebLink(config.webLink || '');
           setCustomText(config.customText || '');
         } catch (e) {
-          console.error('恢复缓存配置失败:', e);
+          console.error('Failed to restore cached configuration:', e);
         }
       }
       
-      // 恢复脚本内容
+      // Restore script content
       const cachedScriptContent = localStorage.getItem(CACHE_KEYS.SCRIPT_CONTENT);
       if (cachedScriptContent && cachedStep === '3') {
         try {
@@ -271,13 +271,13 @@ export default function Dashboard() {
           
           setEditableScript(editableText);
         } catch (e) {
-          console.error('恢复脚本内容失败:', e);
+          console.error('Failed to restore script content:', e);
         }
       }
     }
   }, []);
 
-  // 监听音频进度
+  // Listen for audio progress
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
@@ -296,7 +296,7 @@ export default function Dashboard() {
     };
   }, [showScript?.audioUrl]);
 
-  // 拖动进度条
+  // Drag progress bar
   const handleSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
     const audio = audioRef.current;
     if (!audio) return;
@@ -305,7 +305,7 @@ export default function Dashboard() {
     setAudioProgress(value);
   };
 
-  // 播放/暂停
+  // Play/pause
   const handlePlayAudio = () => {
     const audio = audioRef.current;
     if (!audio) return;
@@ -318,7 +318,7 @@ export default function Dashboard() {
     }
   };
 
-  // 音频播放结束时重置播放状态
+  // Reset play state when audio ends
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
@@ -327,14 +327,14 @@ export default function Dashboard() {
     return () => audio.removeEventListener('ended', handleEnded);
   }, []);
 
-  // 音量变化
+  // Volume change
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
     audio.volume = isMuted ? 0 : volume;
   }, [volume, isMuted]);
 
-  // 音量滑块处理
+  // Volume slider handler
   const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = Number(e.target.value);
     setVolume(value);
@@ -342,12 +342,12 @@ export default function Dashboard() {
     else setIsMuted(false);
   };
 
-  // 静音切换
+  // Toggle mute
   const handleMute = () => {
     setIsMuted((prev) => !prev);
   };
 
-  // 下载音频
+  // Download audio
   const handleDownload = () => {
     if (!showScript?.audioUrl) return;
     const url = showScript.audioUrl.startsWith('http') ? showScript.audioUrl : API_BASE_URL + showScript.audioUrl;
@@ -359,7 +359,7 @@ export default function Dashboard() {
     document.body.removeChild(a);
   };
 
-  // 格式化时间
+  // Format time
   const formatTime = (sec: number) => {
     if (isNaN(sec)) return '00:00';
     const m = Math.floor(sec / 60);
@@ -367,64 +367,64 @@ export default function Dashboard() {
     return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
   };
 
-  // 处理下一步
+  // Handle next step
   const handleNextStep = () => {
     if (step === 1) {
-      // 播客类型验证
+      // Podcast type validation
       if (!podcastType) {
-        setError('请选择播客类型')
+        setError('Please select a podcast type')
         return
       }
       
-      // 存储播客类型到缓存
+      // Store podcast type in cache
       savePodcastType(podcastType);
       saveCurrentStep(2);
       
     } else if (step === 2) {
-      // 信息源和基本信息验证
+      // Information source and basic info validation
       const hasWebLink = webLink.trim() !== ''
       const hasCustomText = customText.trim() !== ''
       if (!hasWebLink && !hasCustomText) {
-        setError('请先添加信息源')
+        setError('Please add an information source')
         return
       }
       if (!podcastName.trim()) {
-        setError('请输入播客名称')
+        setError('Please enter a podcast name')
         return
       }
       if (!episodeName.trim()) {
-        setError('请输入节目名称')
+        setError('Please enter an episode name')
         return
       }
       if (hostCount === 2) {
         if (!host1Name.trim()) {
-          setError('请输入主播1姓名')
+          setError('Please enter Host 1 name')
           return
         }
         if (!host2Name.trim()) {
-          setError('请输入主播2姓名')
+          setError('Please enter Host 2 name')
           return
         }
         if (!host1Voice) {
-          setError('请选择主播1音色')
-      return
+          setError('Please select Host 1 voice')
+          return
         }
         if (!host2Voice) {
-          setError('请选择主播2音色')
+          setError('Please select Host 2 voice')
           return
         }
       } else {
         if (!host1Name.trim()) {
-          setError('请输入主播姓名')
+          setError('Please enter host name')
           return
         }
         if (!host1Voice) {
-          setError('请选择主播音色')
+          setError('Please select host voice')
           return
         }
       }
       
-      // 保存配置到缓存
+      // Save configuration to cache
       savePodcastConfig({
         podcastName,
         episodeName,
@@ -444,49 +444,49 @@ export default function Dashboard() {
     saveCurrentStep(step + 1)
   }
 
-  // 修改脚本生成函数
+  // Modify script generation function
   const handleGenerateScript = async () => {
-    // 校验信息源
+    // Validate information source
     const hasWebLink = webLink.trim() !== ''
     const hasCustomText = customText.trim() !== ''
     if (!hasWebLink && !hasCustomText) {
-      setError('请至少添加一个信息源')
+      setError('Please add at least one information source')
       return
     }
 
-    // 校验基本信息
+    // Validate basic information
     if (!podcastName.trim()) {
-      setError('请输入播客名称')
+      setError('Please enter a podcast name')
       return
     }
     if (!episodeName.trim()) {
-      setError('请输入节目名称')
+      setError('Please enter an episode name')
       return
     }
     if (hostCount === 2) {
       if (!host1Name.trim()) {
-        setError('请输入主播1姓名')
+        setError('Please enter Host 1 name')
         return
       }
       if (!host2Name.trim()) {
-        setError('请输入主播2姓名')
+        setError('Please enter Host 2 name')
         return
       }
       if (!host1Voice) {
-        setError('请选择主播1音色')
+        setError('Please select Host 1 voice')
         return
       }
       if (!host2Voice) {
-        setError('请选择主播2音色')
+        setError('Please select Host 2 voice')
         return
       }
     } else {
       if (!host1Name.trim()) {
-        setError('请输入主播姓名')
+        setError('Please enter host name')
         return
       }
       if (!host1Voice) {
-        setError('请选择主播音色')
+        setError('Please select host voice')
         return
       }
     }
@@ -498,7 +498,7 @@ export default function Dashboard() {
     setScriptContent(null)
     contentPartsRef.current = []
     
-    // 保存配置到缓存（这个可以保留，因为是步骤2的配置）
+    // Save configuration to cache (can be kept as it's step 2 configuration)
     savePodcastConfig({
       podcastName,
       episodeName,
@@ -512,21 +512,21 @@ export default function Dashboard() {
       customText
     });
     
-    // 视觉上立即转到步骤3，但不保存到缓存
+    // Visually move to step 3 immediately, but don't save to cache
     setStep(3)
     
     try {
-      // 准备hosts数据
+      // Prepare hosts data
       const hosts = hostCount === 2
         ? [
-            { name: host1Name.trim() || '主播1', voice: host1Voice },
-            { name: host2Name.trim() || '主播2', voice: host2Voice }
+            { name: host1Name.trim() || 'Host 1', voice: host1Voice },
+            { name: host2Name.trim() || 'Host 2', voice: host2Voice }
           ]
         : [
-            { name: host1Name.trim() || '主播1', voice: host1Voice }
+            { name: host1Name.trim() || 'Host 1', voice: host1Voice }
           ]
 
-      // 创建请求配置
+      // Create request configuration
       const requestData = {
         url: webLink || undefined,
         textContent: customText || undefined,
@@ -538,7 +538,7 @@ export default function Dashboard() {
         uid: '1'
       }
 
-      // 发送POST请求并获取流式响应
+      // Send POST request and get streaming response
       const response = await fetch(`${API_BASE_URL}/api/v1/generate-script-stream`, {
         method: 'POST',
         headers: {
@@ -551,12 +551,12 @@ export default function Dashboard() {
         throw new Error(`HTTP error! status: ${response.status}`)
       }
 
-      // 获取可读流
+      // Get readable stream
       const reader = response.body!.getReader()
       const decoder = new TextDecoder()
-      let buffer = '' // 用于存储不完整的SSE消息
+      let buffer = '' // Used to store incomplete SSE messages
 
-      // 循环读取流数据
+      // Loop to read stream data
       while (true) {
         const { done, value } = await reader.read()
         
@@ -564,17 +564,17 @@ export default function Dashboard() {
           break
         }
 
-        // 解码二进制数据为文本
+        // Decode binary data to text
         const text = decoder.decode(value)
         buffer += text
 
-        // 处理SSE格式的数据
+        // Process SSE format data
         while (buffer.includes('\n\n')) {
           const messageEndIndex = buffer.indexOf('\n\n')
           const message = buffer.slice(0, messageEndIndex)
           buffer = buffer.slice(messageEndIndex + 2)
 
-          // 解析SSE消息
+          // Parse SSE message
           const eventMatch = message.match(/^event: (.+)$/m)
           const dataMatch = message.match(/^data: (.+)$/m)
 
@@ -582,36 +582,36 @@ export default function Dashboard() {
             const eventType = eventMatch[1]
             const data = dataMatch[1]
 
-            // 处理不同事件类型
+            // Handle different event types
             switch (eventType) {
               case 'status':
                 if (data === 'init') {
-                  setScriptChunks(prev => [...prev, '开始处理内容源...\n'])
+                  setScriptChunks(prev => [...prev, 'Starting to process content source...\n'])
                   setScriptProgress(5)
                 } else if (data === 'start') {
-                  setScriptChunks(prev => [...prev, '内容源处理完成，开始生成脚本...\n'])
+                  setScriptChunks(prev => [...prev, 'Content source processed, generating script...\n'])
                   setScriptProgress(10)
                 } else if (data === 'end') {
-                  setScriptChunks(prev => [...prev, '\n脚本生成完成！'])
+                  setScriptChunks(prev => [...prev, '\nScript generation complete!'])
                   setScriptProgress(100)
                   setIsGeneratingScript(false)
-                  // 不再在这里处理内容解析，而是等待 'complete' 事件
+                  // No longer process content parsing here, wait for 'complete' event
                 }
                 break;
               
               case 'error':
-                setScriptChunks(prev => [...prev, `错误: ${data}\n`])
+                setScriptChunks(prev => [...prev, `Error: ${data}\n`])
                 setError(data)
                 setIsGeneratingScript(false)
                 break;
               
               case 'content':
-                // 将内容显示在进度区域
+                // Display content in progress area
                 setScriptChunks(prev => {
                   const lastChunk = prev[prev.length - 1] || ''
                   const newChunks = [...prev]
-                  if (lastChunk.startsWith('状态:') || 
-                      lastChunk.startsWith('错误:') || 
+                  if (lastChunk.startsWith('Status:') || 
+                      lastChunk.startsWith('Error:') || 
                       lastChunk.endsWith('\n') || 
                       prev.length === 0) {
                     newChunks.push(data)
@@ -621,14 +621,14 @@ export default function Dashboard() {
                   return newChunks
                 });
                 
-                // 使用 ref 来收集内容片段
+                // Use ref to collect content fragments
                 contentPartsRef.current.push(data);
                 
                 break;
               
               case 'complete':
                 try {
-                  console.log("收到complete事件:", data);
+                  console.log("Received complete event:", data);
                   const scriptData = JSON.parse(data) as ScriptContent;
                   setScriptContent(scriptData);
                   
@@ -638,70 +638,70 @@ export default function Dashboard() {
                   
                   setEditableScript(editableText);
                   
-                  // 只有在成功接收到完整脚本后，才保存步骤3和脚本内容到缓存
+                  // Only save step 3 and script content to cache after successful receipt of complete script
                   saveCurrentStep(3);
                   saveScriptContent(scriptData);
                   
-                  console.log("脚本生成成功，已收到完整内容");
+                  console.log("Script generation successful, complete content received");
                 } catch (e) {
-                  console.error("完整JSON解析失败:", e);
-                  setError("脚本JSON解析失败");
-                  // 如果解析失败，回到步骤2
+                  console.error("Complete JSON parsing failed:", e);
+                  setError("Script JSON parsing failed");
+                  // Return to step 2 if parsing fails
                   setStep(2);
                   saveCurrentStep(2);
                 }
                 break;
               
               default:
-                console.log(`未知事件类型: ${eventType}`, data)
+                console.log(`Unknown event type: ${eventType}`, data)
             }
           }
         }
       }
 
     } catch (error) {
-      console.error('脚本生成失败:', error)
-      setError('脚本生成失败，请稍后重试')
+      console.error('Script generation failed:', error)
+      setError('Script generation failed, please try again later')
       setIsGeneratingScript(false)
-      // 发生错误时回到步骤2
+      // Return to step 2 if error occurs
       setStep(2);
       saveCurrentStep(2);
     }
   }
 
-  // 添加生成音频函数
+  // Add audio generation function
   const handleGenerateAudio = async () => {
     if (!scriptContent) {
-      setError('请先生成脚本')
+      setError('Please generate a script first')
       return
     }
     
-    // 验证每段对话内容不为空
+    // Validate that no dialog content is empty
     if (scriptContent.contents.some(line => !line.content.trim())) {
-      setError('对话内容不能为空')
+      setError('Dialog content cannot be empty')
       return
     }
     
-    // 验证每段对话内容不超过200字
+    // Validate that no dialog content exceeds 200 characters
     if (scriptContent.contents.some(line => line.content.length > 200)) {
-      setError('每段对话内容不能超过200字')
+      setError('Each dialog content cannot exceed 200 characters')
       return
     }
     
     setIsGenerating(true)
     
     try {
-      // 准备hosts数据
+      // Prepare hosts data
       const hosts = hostCount === 2
         ? [
-            { name: host1Name.trim() || '主播1', voice: host1Voice },
-            { name: host2Name.trim() || '主播2', voice: host2Voice }
+            { name: host1Name.trim() || 'Host 1', voice: host1Voice },
+            { name: host2Name.trim() || 'Host 2', voice: host2Voice }
           ]
         : [
-            { name: host1Name.trim() || '主播1', voice: host1Voice }
+            { name: host1Name.trim() || 'Host 1', voice: host1Voice }
           ]
 
-      // 创建新的播客项时使用格式化的文本
+      // Use formatted text when creating new podcast item
       const formattedScript = scriptContent.contents
         .map(line => `${line.speakerName}: ${line.content}`)
         .join('\n\n');
@@ -721,10 +721,10 @@ export default function Dashboard() {
         nftPrice: nftPrice.toString()
       }
 
-      // 添加到列表顶部
+      // Add to top of list
       setPodcasts(prev => [newPodcast, ...prev])
 
-      // 发送请求到后端
+      // Send request to backend
       const response = await fetch(`${API_BASE_URL}/api/v1/generate-audio`, {
         method: 'POST',
         headers: {
@@ -745,20 +745,20 @@ export default function Dashboard() {
         throw new Error(`HTTP error! status: ${response.status}`)
       }
 
-      // 重置表单并回到步骤1
+      // Reset form and return to step 1
       setWebLink('')
       setCustomText('')
       setPodcastName('')
       setEpisodeName('')
       setDuration(5)
-      setHost1Name('主播1')
-      setHost2Name('主播2')
+      setHost1Name('Host 1')
+      setHost2Name('Host 2')
       setStep(1)
       setScriptContent(null)
       setEditableScript('')
     } catch (error) {
-      console.error('音频生成失败:', error)
-      setError('音频生成失败，请稍后重试')
+      console.error('Audio generation failed:', error)
+      setError('Audio generation failed, please try again later')
     } finally {
       setIsGenerating(false)
     }
@@ -771,16 +771,16 @@ export default function Dashboard() {
       <main className="flex-1 pt-18 sm:pt-14">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-12">
           
-          {/* 设置表单卡片 */}
+          {/* Settings form card */}
           <div className="bg-gray-800/40 backdrop-blur-xl rounded-2xl sm:rounded-3xl border border-gray-700/50 shadow-xl shadow-blue-900/20 mb-8 sm:mb-10">
             <div className="px-6 sm:px-8 lg:px-12 pt-6 sm:pt-8 pb-4 sm:pb-6 border-b border-gray-700/50">
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <h2 className="text-2xl sm:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-300 to-purple-400 flex items-center">
                   <FiSettings className="mr-3 h-7 w-7 text-blue-400" />
-                  创建新播客
+                  Create New Podcast
                 </h2>
                 <div className="inline-flex items-center px-4 py-2 rounded-full bg-blue-900/30 border border-blue-700/50 text-blue-300">
-                  步骤 {step}/3
+                  Step {step}/3
                 </div>
               </div>
             </div>
@@ -800,7 +800,7 @@ export default function Dashboard() {
                         setError('')
                       }}
                     >
-                      {/* 添加发光效果 */}
+                      {/* Add glow effect */}
                       {podcastType === 2 && (
                         <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-purple-500/10 animate-pulse"></div>
                       )}
@@ -815,26 +815,26 @@ export default function Dashboard() {
                           <FiHeadphones className="h-8 w-8 sm:h-10 sm:w-10" />
                         </div>
                         <div>
-                          <h3 className="text-xl sm:text-2xl font-bold text-white mb-2">资讯&谈话</h3>
+                          <h3 className="text-xl sm:text-2xl font-bold text-white mb-2">News & Talk</h3>
                           <p className="text-gray-400 group-hover:text-gray-300 transition-colors">
-                            将文章转换为专业的播客内容，支持多种信息源
+                            Convert articles to professional podcast content, supporting multiple information sources
                           </p>
                         </div>
                       </div>
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      {/* 即将推出的功能卡片 */}
+                      {/* Coming soon feature cards */}
                       {[
                         {
                           icon: <FiMusic />,
-                          title: '音乐电台',
-                          description: '即将推出'
+                          title: 'Music Radio',
+                          description: 'Coming soon'
                         },
                         {
                           icon: <FiBook />,
-                          title: '语言学习',
-                          description: '即将推出'
+                          title: 'Language Learning',
+                          description: 'Coming soon'
                         }
                       ].map((item, idx) => (
                         <div key={idx} className="relative overflow-hidden rounded-2xl bg-gray-800/30 border border-gray-700/30 p-6 opacity-60 cursor-not-allowed">
@@ -864,44 +864,44 @@ export default function Dashboard() {
                       onClick={handleNextStep}
                       disabled={!podcastType}
                     >
-                      下一步
+                      Next
                     </Button>
                   </div>
                 )}
 
                 {step === 2 && (
                   <div className="space-y-8">
-                    {/* 基本信息卡片 */}
+                    {/* Basic information card */}
                     <div className="bg-blue-900/20 rounded-2xl border border-blue-700/50 p-6 sm:p-8">
                       <h3 className="text-lg font-semibold text-blue-300 flex items-center mb-6">
                         <FiInfo className="mr-2" />
-                        基本信息
+                        Basic Information
                       </h3>
                       
                       <div className="space-y-4">
                         <input
                           type="text"
-                          placeholder="播客名称"
+                          placeholder="Podcast Name"
                           className="w-full bg-gray-900/50 border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all"
                           value={podcastName}
                           onChange={(e) => setPodcastName(e.target.value)}
                         />
                         <input
                           type="text"
-                          placeholder="本期节目名称"
+                          placeholder="Episode Name"
                           className="w-full bg-gray-900/50 border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all"
                           value={episodeName}
                           onChange={(e) => setEpisodeName(e.target.value)}
                         />
                         <div>
                           <label className="block text-xs sm:text-sm text-blue-400 mb-1 sm:mb-2">
-                            期望时长
+                            Desired Length
                           </label>
                           <div className="flex gap-4">
                             {[
-                              { label: '超短（1-10分钟）', value: 5 },
-                              { label: '短（10-20分钟）', value: 15 },
-                              { label: '长（20-30分钟）', value: 25 }
+                              { label: 'Short (1-10 min)', value: 5 },
+                              { label: 'Medium (10-20 min)', value: 15 },
+                              { label: 'Long (20-30 min)', value: 25 }
                             ].map(opt => (
                               <button
                                 key={opt.value}
@@ -923,34 +923,34 @@ export default function Dashboard() {
                       </div>
                     </div>
 
-                    {/* 信息源 */}
+                    {/* Information Source */}
                     <div className="bg-green-900/20 rounded-2xl border border-green-700/50 p-6 sm:p-8">
                       <h3 className="text-lg font-semibold text-green-300 flex items-center mb-6">
                         <FiLink className="mr-2" />
-                        信息源
+                        Information Source
                       </h3>
                       
                       <div className="space-y-4">
                         <input
                           type="text"
-                          placeholder="输入网页链接"
+                          placeholder="Enter Web Link"
                           className="w-full bg-gray-900/50 border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-green-500/50 transition-all"
                           value={webLink}
                           onChange={(e) => setWebLink(e.target.value)}
                         />
-                        {/* 新增反爬虫平台提醒 */}
+                        {/* Added anti-crawler platform reminder */}
                         <div className="text-xs text-yellow-400 mt-1">
-                          若平台（如x.com）有反爬虫机制，内容将无法自动获取，请手动粘贴文本到下方输入框。<br />
+                          If the platform (e.g., x.com) has anti-crawler mechanisms, content may not be automatically retrieved. Please manually paste text into the input box below.<br />
                         </div>
-                        <div className="text-center text-xs sm:text-sm text-green-400 my-1 sm:my-2">或</div>
+                        <div className="text-center text-xs sm:text-sm text-green-400 my-1 sm:my-2">or</div>
                         <textarea
-                          placeholder="输入自定义文本内容"
+                          placeholder="Enter Custom Text Content"
                           className="w-full bg-gray-900/50 border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-green-500/50 transition-all h-24 sm:h-32 resize-none"
                           value={customText}
                           onChange={e => {
                             const val = e.target.value
                             if (val.length > 10000) {
-                              setCustomTextError('自定义文本不能超过 10000 字')
+                              setCustomTextError('Custom text cannot exceed 10,000 characters')
                             } else {
                               setCustomTextError('')
                               setCustomText(val)
@@ -959,29 +959,29 @@ export default function Dashboard() {
                           maxLength={10000}
                         />
                         <div className="flex justify-between text-xs text-green-400">
-                          <span>已输入 {customText.length} / 10000 字</span>
+                          <span>Entered {customText.length} / 10000 characters</span>
                           {customTextError && <span className="text-red-400">{customTextError}</span>}
                         </div>
                       </div>
                     </div>
 
-                    {/* 主播设置 */}
+                    {/* Host Settings */}
                     <div className="bg-blue-900/20 rounded-2xl border border-blue-700/50 p-6 sm:p-8">
                       <h3 className="text-lg font-semibold text-blue-300 flex items-center mb-6">
                         <FiHeadphones className="mr-2" />
-                        主播设置
+                        Host Settings
                       </h3>
                       
                       <div className="space-y-4">
                         <div className="flex gap-4 items-center">
-                          <label className="text-base font-medium text-blue-700">主播人数：</label>
+                          <label className="text-base font-medium text-blue-700">Number of Hosts:</label>
                           <button
                             type="button"
                             className={`px-4 py-2 rounded-lg border-2 font-bold text-base transition-all
                               ${hostCount === 1 ? 'bg-blue-400 text-white border-blue-400' : 'bg-white text-blue-400 border-blue-200 hover:bg-blue-50'}`}
                             onClick={() => setHostCount(1)}
                           >
-                            1人
+                            1 Host
                           </button>
                           <button
                             type="button"
@@ -989,44 +989,44 @@ export default function Dashboard() {
                               ${hostCount === 2 ? 'bg-blue-400 text-white border-blue-400' : 'bg-white text-blue-400 border-blue-200 hover:bg-blue-50'}`}
                             onClick={() => setHostCount(2)}
                           >
-                            2人
+                            2 Hosts
                           </button>
                         </div>
                         <div className="flex flex-col sm:flex-row gap-4">
                           <div className="flex-1">
-                            <label className="block text-sm text-blue-400 mb-1">主播1姓名</label>
+                            <label className="block text-sm text-blue-400 mb-1">Host 1 Name</label>
                             <input
                               type="text"
                               className="w-full bg-gray-900/50 border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all"
                               value={host1Name}
                               onChange={e => setHost1Name(e.target.value)}
-                              placeholder="请输入主播1姓名"
+                              placeholder="Enter Host 1 Name"
                             />
                             <button
                               type="button"
                               onClick={() => setShowVoiceModal1(true)}
                               className="mt-2 w-full rounded-lg border-2 px-4 py-3 text-left text-base border-blue-100 text-blue-700 bg-white hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-300 flex justify-between items-center"
                             >
-                              <span>{voiceOptions.find(v => v.voiceType === host1Voice)?.name || '选择音色'}</span>
+                              <span>{voiceOptions.find(v => v.voiceType === host1Voice)?.name || 'Select Voice'}</span>
                               <FiChevronDown className="h-5 w-5 text-blue-400" />
                             </button>
                           </div>
                           {hostCount === 2 && (
                             <div className="flex-1">
-                              <label className="block text-sm text-blue-400 mb-1">主播2姓名</label>
+                              <label className="block text-sm text-blue-400 mb-1">Host 2 Name</label>
                               <input
                                 type="text"
                                 className="w-full bg-gray-900/50 border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all"
                                 value={host2Name}
                                 onChange={e => setHost2Name(e.target.value)}
-                                placeholder="请输入主播2姓名"
+                                placeholder="Enter Host 2 Name"
                               />
                               <button
                                 type="button"
                                 onClick={() => setShowVoiceModal2(true)}
                                 className="mt-2 w-full rounded-lg border-2 px-4 py-3 text-left text-base border-blue-100 text-blue-700 bg-white hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-300 flex justify-between items-center"
                               >
-                                <span>{voiceOptions.find(v => v.voiceType === host2Voice)?.name || '选择音色'}</span>
+                                <span>{voiceOptions.find(v => v.voiceType === host2Voice)?.name || 'Select Voice'}</span>
                                 <FiChevronDown className="h-5 w-5 text-blue-400" />
                               </button>
                             </div>
@@ -1035,51 +1035,51 @@ export default function Dashboard() {
                       </div>
                     </div>
 
-                    {/* 添加 NFT 配置部分 */}
+                    {/* Add NFT configuration section */}
                     <div className="bg-purple-900/20 rounded-2xl border border-purple-700/50 p-6 sm:p-8">
                       <h3 className="text-lg font-semibold text-purple-300 flex items-center mb-6">
                         <FiCpu className="mr-2" />
-                        NFT 配置
+                        NFT Configuration
                       </h3>
                       
                       <div className="space-y-4">
                         <div>
-                          <label className="block text-sm text-purple-400 mb-1">供应量</label>
+                          <label className="block text-sm text-purple-400 mb-1">Supply</label>
                           <input
                             type="number"
                             min="0"
-                            placeholder="设置 NFT 供应量"
+                            placeholder="Set NFT Supply"
                             className="w-full bg-gray-900/50 border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500/50 transition-all"
                             value={nftSupply||1}
                             onChange={e => setNftSupply(parseInt(e.target.value) || 0)}
                           />
                         </div>
                         <div>
-                          <label className="block text-sm text-purple-400 mb-1">价格 (SOL)</label>
+                          <label className="block text-sm text-purple-400 mb-1">Price (SOL)</label>
                           <input
                             type="number"
                             min="0"
                             step="0.00001"
-                            placeholder="设置 NFT 价格"
+                            placeholder="Set NFT Price"
                             className="w-full bg-gray-900/50 border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500/50 transition-all"
                             value={nftPrice || 0.0001}
                             onChange={e => {
                               const value = e.target.value;
-                              // 如果输入为空，设置为0
+                              // If input is empty, set to 0
                               if (value === '') {
                                 setNftPrice(0);
                                 return;
                               }
-                              // 验证是否为有效数字
+                              // Verify if it's a valid number
                               const num = parseFloat(value);
                               if (!isNaN(num) && num >= 0) {
-                                // 使用 toFixed 来避免科学计数法
+                                // Use toFixed to avoid scientific notation
                                 const fixedNum = parseFloat(num.toFixed(9));
                                 setNftPrice(fixedNum);
                               }
                             }}
                             onBlur={e => {
-                              // 在失去焦点时格式化显示
+                              // Format display when focus is lost
                               const num = parseFloat(e.target.value);
                               if (!isNaN(num) && num >= 0) {
                                 const fixedNum = parseFloat(num.toFixed(9));
@@ -1105,7 +1105,7 @@ export default function Dashboard() {
                         onClick={() => setStep(1)}
                       >
                         <FiChevronLeft className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
-                        上一步
+                        Previous
                       </Button>
                       <Button
                         variant="primary"
@@ -1113,7 +1113,7 @@ export default function Dashboard() {
                         onClick={handleGenerateScript}
                         disabled={isGeneratingScript}
                       >
-                        {isGeneratingScript ? '生成中...' : '生成脚本'}
+                        {isGeneratingScript ? 'Generating...' : 'Generate Script'}
                       </Button>
                     </div>
                   </div>
@@ -1124,16 +1124,16 @@ export default function Dashboard() {
                     <section className="bg-blue-900/20 rounded-2xl border border-blue-700/50 p-6 sm:p-8">
                       <h3 className="text-lg font-semibold text-blue-300 flex items-center mb-6">
                         <FiFileText className="mr-2 sm:mr-3" /> 
-                        脚本预览与编辑
+                        Script Preview & Edit
                       </h3>
                       {isGeneratingScript ? (
                         <div className="space-y-6">
-                          {/* 美化对话内容展示 */}
+                          {/* Beautify dialogue content display */}
                           <div className="relative">
                             <div className="max-h-[500px] overflow-y-auto bg-gray-900/50 backdrop-blur-sm rounded-xl p-6 text-gray-300 font-mono border border-gray-700/50 shadow-inner">
                               {scriptChunks.map((chunk, index) => {
-                                // 判断是否是状态消息
-                                if (chunk.startsWith('开始') || chunk.startsWith('内容源') || chunk.includes('完成')) {
+                                // Determine if it's a status message
+                                if (chunk.startsWith('Starting') || chunk.startsWith('Content source') || chunk.includes('complete')) {
                                   return (
                                     <div key={index} className="flex items-center justify-center py-2 text-blue-400 text-sm">
                                       <div className="px-4 py-1 bg-blue-900/30 border border-blue-700/50 rounded-full">
@@ -1143,21 +1143,21 @@ export default function Dashboard() {
                                   );
                                 }
                                 
-                                // 普通内容展示为对话气泡
+                                // Regular content displayed as chat bubbles
                                 return (
                                   <div key={index} className="py-2 transition-all duration-300 ease-out animate-fadeIn">
                                     {chunk}
                                   </div>
                                 );
                               })}
-                              {/* 打字机动画指示器 */}
+                              {/* Typewriter animation indicator */}
                               <div className="typing-indicator inline-flex gap-1.5 mt-2">
                                 <span className="w-2 h-2 bg-blue-400 rounded-full animate-typing1"></span>
                                 <span className="w-2 h-2 bg-blue-400 rounded-full animate-typing2"></span>
                                 <span className="w-2 h-2 bg-blue-400 rounded-full animate-typing3"></span>
                               </div>
                             </div>
-                            {/* 渐变遮罩 */}
+                            {/* Gradient mask */}
                             <div className="absolute bottom-0 left-0 w-full h-12 bg-gradient-to-t from-gray-900/50 to-transparent pointer-events-none"></div>
                           </div>
                         </div>
@@ -1166,7 +1166,7 @@ export default function Dashboard() {
                           <div className="space-y-4">
                             {scriptContent?.contents.map((line, index) => (
                               <div key={index} className="flex flex-col gap-2">
-                                {/* 主播名称深色背景 */}
+                                {/* Host name dark background */}
                                 <div className="flex items-center gap-3 px-5 py-3.5 bg-blue-900/40 border border-blue-700/40 rounded-xl">
                                   <FiHeadphones className="w-5 h-5 text-blue-400" />
                                   <div className="flex items-center gap-3 flex-1">
@@ -1174,11 +1174,11 @@ export default function Dashboard() {
                                       {line.speakerName}
                                     </span>
                                     <span className="text-xs px-2 py-0.5 bg-blue-800/60 text-blue-200 rounded-md border border-blue-700/40">
-                                      主播
+                                      Host
                                     </span>
                                   </div>
                                 </div>
-                                {/* 对话内容输入框深色风格 */}
+                                {/* Dialogue content input field dark style */}
                                 <div className="relative">
                                   <textarea
                                     value={line.content}
@@ -1194,7 +1194,7 @@ export default function Dashboard() {
                                     }}
                                     className="w-full px-4 py-2 border border-blue-700/40 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/40 text-blue-100 bg-gray-900/60 font-mono text-sm resize-none hover:border-blue-500/40 transition-all"
                                     rows={2}
-                                    placeholder="编辑对话内容..."
+                                    placeholder="Edit dialogue content..."
                                     maxLength={200}
                                   />
                                   <div className="absolute top-2 right-2 text-blue-700/40">
@@ -1208,32 +1208,32 @@ export default function Dashboard() {
                             ))}
                           </div>
                           <div className="text-xs text-blue-400 mt-2">
-                            * 您可以直接编辑对话内容。主播名称已固定，不可更改。
+                            * You can directly edit the dialogue content. Host names are fixed and cannot be changed.
                           </div>
                         </>
                       )}
                     </section>
 
-                    {/* ShowNote 输入框部分也相应调整样式 */}
+                    {/* ShowNote input section also adjusted style accordingly */}
                     {!isGeneratingScript && scriptContent && (
                       <section className="bg-green-900/20 rounded-2xl border border-green-700/50 p-6 sm:p-8">
                         <h3 className="text-lg font-semibold text-green-300 flex items-center mb-6">
                           <FiFileText className="mr-2 sm:mr-3" /> 
-                          播客ShowNote
+                          Podcast ShowNote
                         </h3>
                         <textarea
-                          placeholder="请输入播客shownote..."
+                          placeholder="Enter podcast shownote..."
                           className="w-full bg-gray-900/50 border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-green-500/50 transition-all h-32 resize-none"
                           value={showNote}
                           onChange={e => setShowNote(e.target.value)}
                         />
                         <p className="text-xs text-green-400 mt-2">
-                          添加ShowNote可以帮助听众更好地了解节目内容
+                          Adding a ShowNote helps listeners better understand the episode content
                         </p>
                       </section>
                     )}
 
-                    {/* 错误提示也保持一致的样式 */}
+                    {/* Error message also maintains consistent style */}
                     {error && (
                       <div className="flex items-center gap-2 text-red-300 bg-red-900/30 px-4 py-3 rounded-xl border border-red-700/50">
                         <FiX className="w-5 h-5" />
@@ -1241,7 +1241,7 @@ export default function Dashboard() {
                       </div>
                     )}
 
-                    {/* 按钮样式保持不变 */}
+                    {/* Button style remains unchanged */}
                     <div className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-5 pt-4">
                       <Button
                         variant="outline"
@@ -1250,7 +1250,7 @@ export default function Dashboard() {
                         disabled={isGeneratingScript}
                       >
                         <FiChevronLeft className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
-                        上一步
+                        Previous
                       </Button>
                       <Button
                         variant="primary"
@@ -1258,7 +1258,7 @@ export default function Dashboard() {
                         onClick={handleGenerateAudio}
                         disabled={isGenerating || isGeneratingScript || !scriptContent}
                       >
-                        {isGenerating ? '生成中...' : '生成播客音频'}
+                        {isGenerating ? 'Generating...' : 'Generate Podcast Audio'}
                       </Button>
                     </div>
                   </div>
@@ -1267,12 +1267,12 @@ export default function Dashboard() {
             </div>
           </div>
 
-          {/* 播客列表卡片 */}
+          {/* Podcast list card */}
           <div className="bg-gray-800/40 backdrop-blur-xl rounded-2xl sm:rounded-3xl border border-gray-700/50 shadow-xl shadow-blue-900/20">
             <div className="px-6 sm:px-8 lg:px-12 py-6 sm:py-8 border-b border-gray-700/50">
               <h2 className="text-2xl font-bold text-white flex items-center">
                 <FiHeadphones className="mr-3 h-6 w-6 text-blue-400" />
-                我的播客
+                My Podcasts
               </h2>
             </div>
 
@@ -1280,8 +1280,8 @@ export default function Dashboard() {
               {podcasts.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-16">
                   <FiHeadphones className="w-16 h-16 text-gray-600 mb-4" />
-                  <p className="text-gray-400 text-lg">暂无播客</p>
-                  <p className="text-gray-500 text-sm mt-2">开始创建你的第一个播客吧！</p>
+                  <p className="text-gray-400 text-lg">No podcasts yet</p>
+                  <p className="text-gray-500 text-sm mt-2">Start creating your first podcast!</p>
                 </div>
               ) : (
                 podcasts.map((podcast, idx) => (
@@ -1310,7 +1310,7 @@ export default function Dashboard() {
                       {isPodcastGenerating(podcast.status) ? (
                         <span className="flex items-center text-base text-blue-300 font-medium bg-blue-900/30 px-4 py-2 rounded-xl border border-blue-700/50">
                           <div className="w-4 h-4 border-2 border-blue-200 border-t-blue-400 rounded-full animate-spin mr-2"></div>
-                          生成中
+                          Generating
                         </span>
                       ) : isPodcastCompleted(podcast.status) ? (
                         <button
@@ -1318,12 +1318,12 @@ export default function Dashboard() {
                           className="group px-4 py-2 rounded-xl bg-blue-500/20 hover:bg-blue-500/30 border border-blue-500/50 hover:border-blue-500 text-blue-300 hover:text-blue-200 transition-all duration-300 flex items-center gap-2"
                         >
                           <FiFileText className="h-4 w-4" />
-                          播客脚本 & 音频
+                          Podcast Script & Audio
                         </button>
                       ) : (
                         <span className="flex items-center text-base text-red-300 font-medium bg-red-900/30 px-4 py-2 rounded-xl border border-red-700/50">
                           <FiX className="mr-1 h-4 w-4" />
-                          生成失败
+                          Generation Failed
                         </span>
                       )}
                     </div>
@@ -1338,7 +1338,7 @@ export default function Dashboard() {
       {showScript && (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
           <div className="bg-gray-900/95 rounded-2xl shadow-2xl p-0 max-w-lg w-full relative flex flex-col border border-gray-700/70">
-            {/* 关闭按钮 */}
+            {/* Close button */}
             <button
               className="absolute top-4 right-4 z-10 w-10 h-10 flex items-center justify-center rounded-full
                 bg-gradient-to-br from-blue-700 via-purple-700 to-blue-900 text-white
@@ -1347,12 +1347,12 @@ export default function Dashboard() {
                 hover:scale-110 hover:shadow-xl
                 transition-all duration-200"
               onClick={() => setShowScript(null)}
-              aria-label="关闭"
+              aria-label="Close"
             >
               <FiX className="w-7 h-7" />
             </button>
-            <h3 className="text-xl font-bold pt-6 pb-2 px-8 text-blue-200 text-center mb-2">播客脚本 & 音频</h3>
-            {/* 音频播放器 */}
+            <h3 className="text-xl font-bold pt-6 pb-2 px-8 text-blue-200 text-center mb-2">Podcast Script & Audio</h3>
+            {/* Audio player */}
             <div className="w-full flex flex-col items-center justify-center px-8 mb-2">
               {showScript.audioUrl ? (
                 <audio
@@ -1368,14 +1368,14 @@ export default function Dashboard() {
                   }}
                 />
               ) : (
-                <div className="text-blue-300 mb-4">暂无音频</div>
+                <div className="text-blue-300 mb-4">No audio available</div>
               )}
             </div>
-            {/* 脚本气泡 */}
+            {/* Script bubbles */}
             <div className="overflow-y-auto max-h-[50vh] px-8 pb-8">
               {showScript.script
                 ? (() => {
-                    // 动态分配speaker颜色
+                    // Dynamically assign speaker colors
                     const speakerOrder: string[] = [];
                     return showScript.script
                       .split('\n')
@@ -1384,11 +1384,11 @@ export default function Dashboard() {
                         const [speakerRaw, ...contentArr] = line.split(':');
                         const speaker = speakerRaw.trim();
                         const content = contentArr.join(':').trim();
-                        // 记录出现顺序
+                        // Record appearance order
                         if (speaker && !speakerOrder.includes(speaker)) {
                           speakerOrder.push(speaker);
                         }
-                        // 只用前两个speaker
+                        // Only use the first two speakers
                         const isHost1 = speaker === speakerOrder[0];
                         const bubbleColor = isHost1
                           ? 'bg-blue-100 text-blue-800'
@@ -1398,28 +1398,28 @@ export default function Dashboard() {
                         return (
                           <div key={idx} className={`flex ${align} mb-3`}>
                             <div className={`rounded-xl px-4 py-2 ${bubbleColor} max-w-[80%]`}>
-                              <span className={`font-semibold mr-2 ${nameColor}`}>{speaker}：</span>
+                              <span className={`font-semibold mr-2 ${nameColor}`}>{speaker}:</span>
                               <span className="break-words">{content}</span>
                             </div>
                           </div>
                         );
                       });
                   })()
-                : <div className="text-blue-300">暂无脚本</div>
+                : <div className="text-blue-300">No script available</div>
               }
             </div>
           </div>
         </div>
       )}
 
-      {/* 添加音色选择模态框 */}
+      {/* Add voice selection modal */}
       {(showVoiceModal1 || showVoiceModal2) && (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
           <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full max-h-[80vh] overflow-y-auto relative p-0">
-            {/* 固定顶部控制栏 */}
+            {/* Fixed top control bar */}
             <div className="sticky top-0 z-10 bg-white flex justify-between items-center px-6 pt-6 pb-2 border-b border-blue-100">
               <h3 className="text-xl font-bold text-blue-700">
-                选择音色 - {showVoiceModal1 ? '主播1' : '主播2'}
+                Select Voice - {showVoiceModal1 ? 'Host 1' : 'Host 2'}
               </h3>
               <button
                 onClick={() => {
@@ -1431,7 +1431,7 @@ export default function Dashboard() {
                 <FiX className="h-6 w-6" />
               </button>
             </div>
-            {/* 音色列表内容 ... */}
+            {/* Voice list content ... */}
             <div className="space-y-4 px-6 pb-6 pt-2">
               {Object.entries(groupedVoices).map(([scene, voices]) => (
                 <div key={scene} className="border-b border-blue-100 pb-4">

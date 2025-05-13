@@ -15,7 +15,7 @@ export default function Marketplace() {
   const [totalItems, setTotalItems] = useState(0);
   const pageSize = 12;
   
-  // 加载NFT数据
+  // Load NFT data
   useEffect(() => {
     const loadNFTs = async () => {
       try {
@@ -25,7 +25,7 @@ export default function Marketplace() {
         setTotalItems(data.total);
         setLoading(false);
       } catch (err) {
-        setError('加载NFT市场数据失败');
+        setError('Failed to load NFT marketplace data');
         setLoading(false);
       }
     };
@@ -33,10 +33,10 @@ export default function Marketplace() {
     loadNFTs();
   }, [page]);
   
-  // 计算总页数
+  // Calculate total pages
   const totalPages = Math.ceil(totalItems / pageSize);
   
-  // 处理分页
+  // Handle pagination
   const handlePrevPage = () => {
     if (page > 1) {
       setPage(page - 1);
@@ -55,40 +55,40 @@ export default function Marketplace() {
       
       <main className="pt-24 pb-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* 页面标题 */}
+          {/* Page title */}
           <div className="mb-12 text-center">
             <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-300 to-purple-400 mb-4">
-              NFT 播客市场
+              NFT Podcast Marketplace
             </h1>
             <p className="max-w-2xl mx-auto text-gray-300">
-              探索独特的播客 NFT 收藏品，支持创作者并拥有您喜爱的内容
+              Explore unique podcast NFT collections, support creators, and own your favorite content
             </p>
           </div>
           
-          {/* 筛选和搜索 */}
+          {/* Filter and search */}
           <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
             <div className="flex items-center text-gray-300 bg-gray-800/40 backdrop-blur-sm rounded-xl border border-gray-700/50 p-2">
               <button className="flex items-center px-4 py-2 rounded-lg bg-blue-900/40 border border-blue-700/50">
                 <FiGrid className="mr-2" />
-                全部
+                All
               </button>
               <button className="flex items-center px-4 py-2 text-gray-400 hover:text-gray-200">
                 <FiFilter className="mr-2" />
-                最新发布
+                Latest
               </button>
             </div>
             
             <div className="relative w-full md:w-auto">
               <input
                 type="text"
-                placeholder="搜索播客NFT..."
+                placeholder="Search podcast NFTs..."
                 className="w-full md:w-64 bg-gray-800/40 border border-gray-700/50 rounded-xl py-2 pl-10 pr-4 text-gray-200 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500/40"
               />
               <FiSearch className="absolute left-3 top-3 text-gray-500" />
             </div>
           </div>
           
-          {/* NFT 网格 */}
+          {/* NFT grid */}
           {loading ? (
             <div className="flex justify-center items-center py-20">
               <div className="w-12 h-12 border-4 border-gray-600 border-t-blue-500 rounded-full animate-spin"></div>
@@ -100,8 +100,8 @@ export default function Marketplace() {
           ) : nfts.length === 0 ? (
             <div className="text-center py-20 text-gray-400">
               <FiBox className="mx-auto h-16 w-16 mb-4" />
-              <p className="text-xl font-medium">暂无NFT项目</p>
-              <p className="mt-2">请稍后再来查看</p>
+              <p className="text-xl font-medium">No NFT items yet</p>
+              <p className="mt-2">Please check back later</p>
             </div>
           ) : (
             <>
@@ -111,7 +111,7 @@ export default function Marketplace() {
                 ))}
               </div>
               
-              {/* 分页 */}
+              {/* Pagination */}
               {totalPages > 1 && (
                 <div className="flex justify-center mt-12">
                   <div className="flex items-center gap-2 bg-gray-800/40 backdrop-blur-sm rounded-xl border border-gray-700/50 p-2">

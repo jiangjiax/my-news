@@ -23,7 +23,7 @@ export default function NFTDetailPage() {
   const [volume, setVolume] = useState(1);
   const [isMuted, setIsMuted] = useState(false);
   
-  // 加载NFT详情
+  // Load NFT details
   useEffect(() => {
     const loadNFTDetail = async () => {
       try {
@@ -32,7 +32,7 @@ export default function NFTDetailPage() {
         setNft(data);
         setLoading(false);
       } catch (err) {
-        setError('加载NFT详情失败');
+        setError('Failed to load NFT details');
         setLoading(false);
       }
     };
@@ -42,7 +42,7 @@ export default function NFTDetailPage() {
     }
   }, [id]);
   
-  // 监听音频进度
+  // Monitor audio progress
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
@@ -61,7 +61,7 @@ export default function NFTDetailPage() {
     };
   }, [nft?.audioUrl]);
   
-  // 拖动进度条
+  // Drag progress bar
   const handleSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
     const audio = audioRef.current;
     if (!audio) return;
@@ -70,7 +70,7 @@ export default function NFTDetailPage() {
     setAudioProgress(value);
   };
   
-  // 播放/暂停
+  // Play/pause
   const handlePlayAudio = () => {
     const audio = audioRef.current;
     if (!audio) return;
@@ -83,7 +83,7 @@ export default function NFTDetailPage() {
     }
   };
   
-  // 音频播放结束时重置播放状态
+  // Reset play state when audio ends
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
@@ -92,7 +92,7 @@ export default function NFTDetailPage() {
     return () => audio.removeEventListener('ended', handleEnded);
   }, []);
   
-  // 格式化时间
+  // Format time
   const formatTime = (sec: number) => {
     if (isNaN(sec)) return '00:00';
     const m = Math.floor(sec / 60);
@@ -100,52 +100,52 @@ export default function NFTDetailPage() {
     return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
   };
   
-  // 格式化日期
+  // Format date
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('zh-CN', { 
+    return new Date(dateString).toLocaleDateString('en-US', { 
       year: 'numeric', 
       month: 'long', 
       day: 'numeric' 
     });
   };
   
-  // 格式化脚本
+  // Format script
   const formatScript = (script: any) => {
     if (!script) return [];
     
-    // 检查 script 是否已经是对象
+    // Check if script is already an object
     if (typeof script === 'object' && script.contents) {
       return script.contents;
     }
     
-    // 如果是字符串，尝试解析
+    // If it's a string, try to parse
     try {
       const parsedScript = typeof script === 'string' ? JSON.parse(script) : script;
       return parsedScript.contents || [];
     } catch (err) {
-      console.error('脚本解析错误:', err);
+      console.error('Script parsing error:', err);
       return [];
     }
   };
   
-  // 返回上一页
+  // Go back to previous page
   const handleBack = () => {
     router.back();
   };
   
-  // 处理购买NFT
+  // Handle buying NFT
   const handleBuyNFT = () => {
-    alert('购买功能正在开发中');
+    alert('Purchase feature is under development');
   };
   
-  // 音量变化
+  // Volume change
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
     audio.volume = isMuted ? 0 : volume;
   }, [volume, isMuted]);
 
-  // 音量滑块处理
+  // Volume slider handler
   const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = Number(e.target.value);
     setVolume(value);
@@ -153,15 +153,15 @@ export default function NFTDetailPage() {
     else setIsMuted(false);
   };
 
-  // 静音切换
+  // Toggle mute
   const handleMute = () => {
     setIsMuted((prev) => !prev);
   };
 
-  // 下载音频
+  // Download audio
   const handleDownload = () => {
     if (!nft?.audioUrl) return;
-    const url = nft.audioUrl.startsWith('http') ? nft.audioUrl : `https://podx.goalachieveapp.com${nft.audioUrl}`;
+    const url = nft.audioUrl.startsWith('http') ? nft.audioUrl : `http://127.0.0.1:8090${nft.audioUrl}`;
     const a = document.createElement('a');
     a.href = url;
     a.download = `${nft.podcastName || 'podcast'}.mp3`;
@@ -176,13 +176,13 @@ export default function NFTDetailPage() {
       
       <main className="pt-24 pb-16">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* 返回按钮 */}
+          {/* Back button */}
           <button 
             onClick={handleBack}
             className="mb-8 flex items-center text-gray-400 hover:text-white transition-colors"
           >
             <FiArrowLeft className="mr-2" />
-            返回市场
+            Back to Marketplace
           </button>
           
           {loading ? (
@@ -195,23 +195,23 @@ export default function NFTDetailPage() {
             </div>
           ) : nft ? (
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-              {/* 左侧 - 播客封面和音频播放 */}
+              {/* Left side - Podcast cover and audio playback */}
               <div className="lg:col-span-1">
                 <div className="bg-gradient-to-br from-gray-800/40 via-gray-900/40 to-gray-800/40 backdrop-blur-xl rounded-2xl border border-gray-700/30 overflow-hidden shadow-xl shadow-blue-900/10">
-                  {/* 播客封面 - 更现代的设计 */}
+                  {/* Podcast cover - More modern design */}
                   <div className="relative h-72 overflow-hidden">
-                    {/* 背景渐变 */}
+                    {/* Background gradient */}
                     <div className="absolute inset-0 bg-gradient-to-br from-blue-600/20 via-purple-600/20 to-blue-900/20" />
-                    {/* 装饰性圆形 */}
+                    {/* Decorative circles */}
                     <div className="absolute -top-20 -right-20 w-40 h-40 rounded-full bg-blue-500/10 blur-2xl" />
                     <div className="absolute -bottom-10 -left-10 w-32 h-32 rounded-full bg-purple-500/10 blur-2xl" />
                     
-                    {/* 内容区域 */}
+                    {/* Content area */}
                     <div className="relative h-full flex flex-col items-center justify-center p-8">
                       <div className="text-center">
                         <div className="inline-flex items-center px-4 py-1 rounded-full bg-white/5 border border-white/10 backdrop-blur-sm mb-4">
                           <FiHeadphones className="w-4 h-4 text-blue-300 mr-2" />
-                          <span className="text-sm text-blue-200">播客</span>
+                          <span className="text-sm text-blue-200">Podcast</span>
                         </div>
                         <h2 className="text-2xl font-bold text-white mb-3 tracking-wide">
                           {nft.podcastName}
@@ -223,13 +223,13 @@ export default function NFTDetailPage() {
                     </div>
                   </div>
                   
-                  {/* 音频播放区域 */}
+                  {/* Audio playback area */}
                   <div className="px-8 py-6 bg-gradient-to-b from-gray-900/50 to-gray-900/30">
                     {nft.audioUrl ? (
                       <audio
                         ref={audioRef}
                         controls
-                        src={nft.audioUrl.startsWith('http') ? nft.audioUrl : `https://podx.goalachieveapp.com${nft.audioUrl}`}
+                        src={nft.audioUrl.startsWith('http') ? nft.audioUrl : `http://127.0.0.1:8090${nft.audioUrl}`}
                         className="w-full dark-audio"
                         style={{
                           background: '#181e2a',
@@ -238,43 +238,43 @@ export default function NFTDetailPage() {
                         }}
                       />
                     ) : (
-                      <div className="text-blue-300/80 text-center py-4">暂无音频</div>
+                      <div className="text-blue-300/80 text-center py-4">No audio available</div>
                     )}
                     
-                    {/* 创建时间 - 更精致的样式 */}
+                    {/* Creation time - More refined style */}
                     <div className="mt-4 flex items-center justify-center">
                       <div className="px-4 py-2 rounded-full bg-blue-900/20 border border-blue-700/30 backdrop-blur-sm">
                         <div className="flex items-center text-sm text-blue-300/90">
                           <FiClock className="w-4 h-4 mr-2 text-blue-400/80" />
-                          创建于 {formatDate(nft.createdAt)}
+                          Created on {formatDate(nft.createdAt)}
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
                 
-                {/* NFT 信息 */}
+                {/* NFT Information */}
                 <div className="mt-6 bg-gray-800/40 backdrop-blur-sm rounded-2xl border border-gray-700/50 p-6">
                   <h3 className="text-lg font-medium text-white mb-4 flex items-center">
                     <FiInfo className="mr-2" />
-                    NFT 信息
+                    NFT Information
                   </h3>
                   
                   <div className="space-y-4">
                     <div className="flex justify-between items-center">
-                      <span className="text-gray-400">价格</span>
+                      <span className="text-gray-400">Price</span>
                       <span className="font-bold text-white">{nft.nftPrice} SOL</span>
                     </div>
                     <div className="flex justify-between items-center">
-                      <span className="text-gray-400">总供应量</span>
+                      <span className="text-gray-400">Total Supply</span>
                       <span className="text-white">{nft.nftSupply}</span>
                     </div>
                     <div className="flex justify-between items-center">
-                      <span className="text-gray-400">已售数量</span>
+                      <span className="text-gray-400">Sold</span>
                       <span className="text-white">{nft.nftSold} / {nft.nftSupply}</span>
                     </div>
                     <div className="flex justify-between items-center">
-                      <span className="text-gray-400">发行日期</span>
+                      <span className="text-gray-400">Release Date</span>
                       <span className="text-white">{formatDate(nft.createdAt)}</span>
                     </div>
                   </div>
@@ -284,12 +284,12 @@ export default function NFTDetailPage() {
                     className="w-full mt-6 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold py-3 px-4 rounded-xl flex items-center justify-center transition-all duration-300 hover:translate-y-[-2px]"
                   >
                     <FiShoppingCart className="mr-2" />
-                    购买 NFT
+                    Buy NFT
                   </button>
                 </div>
               </div>
               
-              {/* 右侧 - 播客详情和脚本 */}
+              {/* Right side - Podcast details and script */}
               <div className="lg:col-span-2">
                 <div className="bg-gray-800/40 backdrop-blur-sm rounded-2xl border border-gray-700/50 p-6 mb-6">
                   <h2 className="text-2xl font-bold text-white mb-2">{nft.podcastName}</h2>
@@ -300,12 +300,12 @@ export default function NFTDetailPage() {
                   </div>
                 </div>
                 
-                {/* 脚本内容 */}
+                {/* Script content */}
                 <div className="bg-gray-800/40 backdrop-blur-sm rounded-2xl border border-gray-700/50 p-6">
                   <div className="flex justify-between items-center mb-4">
                     <h3 className="text-lg font-medium text-white flex items-center">
                       <FiFileText className="mr-2" />
-                      播客脚本
+                      Podcast Script
                     </h3>
                     <button 
                       onClick={() => setShowFullScript(!showFullScript)}
@@ -313,11 +313,11 @@ export default function NFTDetailPage() {
                     >
                       {showFullScript ? (
                         <>
-                          收起 <FiChevronUp className="ml-1" />
+                          Collapse <FiChevronUp className="ml-1" />
                         </>
                       ) : (
                         <>
-                          展开全部 <FiChevronDown className="ml-1" />
+                          Show All <FiChevronDown className="ml-1" />
                         </>
                       )}
                     </button>
@@ -325,7 +325,7 @@ export default function NFTDetailPage() {
                   
                   <div className="space-y-4 max-h-[600px] overflow-y-auto pr-2">
                     {nft.script && formatScript(nft.script).map((line: any, index: number) => {
-                      // 如果不显示全部且超过5行，则隐藏
+                      // If not showing all and beyond 5 lines, hide
                       if (!showFullScript && index > 4) return null;
                       
                       return (
@@ -337,7 +337,7 @@ export default function NFTDetailPage() {
                                 {line.speakerName}
                               </span>
                               <span className="text-xs px-2 py-0.5 bg-blue-800/60 text-blue-200 rounded-md border border-blue-700/40">
-                                主播
+                                Host
                               </span>
                             </div>
                           </div>
@@ -348,13 +348,13 @@ export default function NFTDetailPage() {
                       );
                     })}
                     
-                    {/* 如果超过5行且未展开全部，显示查看更多提示 */}
+                    {/* If more than 5 lines and not showing all, display view more prompt */}
                     {!showFullScript && nft.script && formatScript(nft.script).length > 5 && (
                       <div 
                         onClick={() => setShowFullScript(true)}
                         className="text-center py-4 text-blue-400 hover:text-blue-300 cursor-pointer"
                       >
-                        查看更多内容...
+                        View more content...
                       </div>
                     )}
                   </div>

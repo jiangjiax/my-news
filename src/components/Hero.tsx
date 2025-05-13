@@ -4,7 +4,7 @@ import Link from 'next/link'
 export default function Hero() {
   return (
     <section className="relative overflow-hidden bg-gradient-to-b from-gray-950 via-gray-900 to-gray-950 py-28 sm:py-40">
-      {/* 背景光斑与动感线条 */}
+      {/* Background effects and dynamic lines */}
       <div className="absolute inset-0 z-0 pointer-events-none">
         <div className="absolute left-[-15%] top-[-25%] w-[700px] h-[700px] bg-blue-700/25 rounded-full filter blur-3xl"></div>
         <div className="absolute right-[-10%] top-[10%] w-[500px] h-[500px] bg-purple-700/20 rounded-full filter blur-3xl"></div>
@@ -19,40 +19,36 @@ export default function Hero() {
         </svg>
       </div>
       <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-8 flex flex-col items-center">
-        {/* 主标题 */}
+        {/* Main title */}
         <h1 className="text-center font-serif font-black tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-blue-300 via-purple-300 to-blue-100 text-5xl sm:text-6xl md:text-7xl leading-[1.08] mb-6 drop-shadow-xl select-none pb-1">
           Create. Own. Everything.
         </h1>
-        <h2 className="text-center text-2xl sm:text-3xl md:text-4xl font-serif font-extrabold tracking-widest
-          text-transparent bg-clip-text bg-gradient-to-r from-purple-200 via-blue-200 to-blue-100 mb-6 select-none drop-shadow-lg">
-          创造 · 拥有 · 一切
-        </h2>
-        {/* 副标题 */}
+        {/* Subtitle */}
         <p className="max-w-2xl text-center text-blue-100/90 text-xl sm:text-2xl font-light leading-relaxed mb-14">
-          在去中心化时代，每个人都是创作者。<br></br>让每一份创意都能确权、变现、流通，真正属于你。
+          In the decentralized era, everyone is a creator.<br></br>Make every creative work authenticated, monetized, and circulated, truly belonging to you.
         </p>
-        {/* 按钮组 */}
+        {/* Button group */}
         <div className="flex flex-col sm:flex-row gap-5 w-full max-w-lg mb-20">
           <Link href="/dashboard" className="flex-1">
             <button className="w-full py-4 px-6 bg-gradient-to-r from-blue-700 via-purple-700 to-blue-800 hover:from-blue-800 hover:to-purple-800 text-white font-extrabold rounded-2xl flex items-center justify-center gap-3 text-xl shadow-xl hover:shadow-2xl transition-all hover:scale-105 tracking-wide">
               <FiPlay className="w-6 h-6" />
-              立即开启创作
+              Get Start
             </button>
           </Link>
           <Link href="#how-it-works" className="flex-1">
             <button className="w-full py-4 px-6 bg-gray-900/90 hover:bg-gray-800 border border-gray-700 text-blue-200 font-bold rounded-2xl flex items-center justify-center gap-3 text-xl transition-all hover:text-white hover:border-blue-400 tracking-wide">
-              了解平台原理
+              How It Works
               <FiArrowRight className="w-6 h-6" />
             </button>
           </Link>
         </div>
-        {/* 价值主张 */}
+        {/* Value propositions */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 w-full mt-2">
           {[
-            { icon: <FiMic className="w-6 h-6" />, title: "AI 驱动", desc: "自动生成专业播客" },
-            { icon: <FiKey className="w-6 h-6" />, title: "Web3 确权", desc: "内容资产化变现" },
-            { icon: <FiUsers className="w-6 h-6" />, title: "无门槛创作", desc: "人人可成为主播" },
-            { icon: <FiGlobe className="w-6 h-6" />, title: "去中心化分发", desc: "更广泛的影响力" }
+            { icon: <FiMic className="w-6 h-6" />, title: "AI Powered", desc: "Auto-generate professional podcasts" },
+            { icon: <FiKey className="w-6 h-6" />, title: "Web3 Authentication", desc: "Content asset monetization" },
+            { icon: <FiUsers className="w-6 h-6" />, title: "No-Barrier Creation", desc: "Anyone can become a host" },
+            { icon: <FiGlobe className="w-6 h-6" />, title: "Decentralized Distribution", desc: "Wider influence reach" }
           ].map((item, idx) => (
             <div
               key={idx}
