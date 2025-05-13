@@ -682,8 +682,8 @@ export default function Dashboard() {
       return
     }
     
-    // Validate that no dialog content exceeds 200 characters
-    if (scriptContent.contents.some(line => line.content.length > 200)) {
+    // Validate that no dialog content exceeds 300 characters
+    if (scriptContent.contents.some(line => line.content.length > 300)) {
       setError('Each dialog content cannot exceed 200 characters')
       return
     }
