@@ -12,7 +12,7 @@ import {
 } from 'react-icons/fi'
 
 // Add API base URL constant
-const API_BASE_URL = 'http://127.0.0.1:8090'
+const API_BASE_URL = 'https://podx.goalachieveapp.com'
 
 // First define status constants
 const PODCAST_STATUS = {
