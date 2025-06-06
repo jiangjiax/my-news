@@ -1,4 +1,4 @@
-import { FiTwitter, FiGithub, FiGlobe, FiMessageCircle } from 'react-icons/fi'
+import { FiTwitter, FiGithub, FiGlobe, FiMessageCircle, FiSend } from 'react-icons/fi'
 
 export default function Footer() {
   return (
@@ -18,11 +18,13 @@ export default function Footer() {
             <a href="https://x.com/MyNews_AI" className="text-gray-400 hover:text-white transition-colors" title="X (Twitter)">
               <FiTwitter className="w-5 h-5" />
             </a>
-            <a href="https://t.me/MyNewsAnn" className="text-gray-400 hover:text-white transition-colors" title="Telegram Channel">
-              <FiMessageCircle className="w-5 h-5" />
+            <a href="https://t.me/MyNewsAnn" className="flex items-center text-gray-400 hover:text-white transition-colors" title="Telegram Channel">
+              <FiSend className="w-5 h-5 mr-1" />
+              <span className="text-sm">Channel</span>
             </a>
-            <a href="https://t.me/MyNews_AI" className="text-gray-400 hover:text-white transition-colors" title="Telegram Community">
-              <FiMessageCircle className="w-5 h-5" />
+            <a href="https://t.me/MyNews_AI" className="flex items-center text-gray-400 hover:text-white transition-colors" title="Telegram Community">
+              <FiSend className="w-5 h-5 mr-1" />
+              <span className="text-sm">Community</span>
             </a>
             <a href="https://github.com/jiangjiax/my-news" className="text-gray-400 hover:text-white transition-colors" title="GitHub">
               <FiGithub className="w-5 h-5" />
