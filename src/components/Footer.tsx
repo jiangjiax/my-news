@@ -1,4 +1,4 @@
-import { FiTwitter, FiGithub, FiLinkedin, FiMail } from 'react-icons/fi'
+import { FiTwitter, FiGithub, FiGlobe, FiMessageCircle } from 'react-icons/fi'
 
 export default function Footer() {
   return (
@@ -14,13 +14,22 @@ export default function Footer() {
             </p>
           </div>
           
-          <div className="flex space-x-8">
-            <a href="https://x.com/JJJ44129022" className="text-gray-400 hover:text-white transition-colors">
+          <div className="flex space-x-6">
+            <a href="https://x.com/MyNews_AI" className="text-gray-400 hover:text-white transition-colors" title="X (Twitter)">
               <FiTwitter className="w-5 h-5" />
+            </a>
+            <a href="https://t.me/MyNewsAnn" className="text-gray-400 hover:text-white transition-colors" title="Telegram Channel">
+              <FiMessageCircle className="w-5 h-5" />
+            </a>
+            <a href="https://t.me/MyNews_AI" className="text-gray-400 hover:text-white transition-colors" title="Telegram Community">
+              <FiMessageCircle className="w-5 h-5" />
+            </a>
+            <a href="https://github.com/jiangjiax/my-news" className="text-gray-400 hover:text-white transition-colors" title="GitHub">
+              <FiGithub className="w-5 h-5" />
             </a>
           </div>
         </div>
       </div>
     </footer>
   )
-} 
+}

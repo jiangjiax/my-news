@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useMemo, useRef } from 'react'
 import Header from '@/components/Header'
+import PaymentModal from '@/components/PaymentModal'
 import { Button } from '@/components/ui/Button'
 import { 
   FiLink, FiSettings, FiPlay, FiPause,
@@ -117,6 +118,11 @@ export default function Dashboard() {
 
   // Add podcast list state
   const [podcasts, setPodcasts] = useState<PodcastItem[]>([])
+  
+  // Payment related states
+  const [showPaymentModal, setShowPaymentModal] = useState<boolean>(false)
+  const [paymentAmount] = useState<string>('0.001') // Fixed amount in ETH
+  const [isPaid, setIsPaid] = useState<boolean>(false)
   const [showScript, setShowScript] = useState<PodcastItem | null>(null)
 
   // Add new states in Dashboard component
@@ -669,6 +675,14 @@ export default function Dashboard() {
     }
   }
 
+  // Add payment success handler
+  const handlePaymentSuccess = () => {
+    setIsPaid(true)
+    setShowPaymentModal(false)
+    // Proceed with audio generation after payment
+    generateAudioAfterPayment()
+  }
+
   // Add audio generation function
   const handleGenerateAudio = async () => {
     if (!scriptContent) {
@@ -683,11 +697,23 @@ export default function Dashboard() {
     }
     
     // Validate that no dialog content exceeds 300 characters
-    if (scriptContent.contents.some(line => line.content.length > 300)) {
-      setError('Each dialog content cannot exceed 200 characters')
+    if (scriptContent.contents.some(line => line.content.length > 400)) {
+      setError('Each dialog content cannot exceed 300 characters')
       return
     }
     
+    // Check if payment is required
+    if (!isPaid) {
+      setShowPaymentModal(true)
+      return
+    }
+    
+    // If already paid, proceed with generation
+    generateAudioAfterPayment()
+  }
+
+  // Separate function for actual audio generation
+  const generateAudioAfterPayment = async () => {
     setIsGenerating(true)
     
     try {
@@ -702,9 +728,9 @@ export default function Dashboard() {
           ]
 
       // Use formatted text when creating new podcast item
-      const formattedScript = scriptContent.contents
-        .map(line => `${line.speakerName}: ${line.content}`)
-        .join('\n\n');
+      const formattedScript = scriptContent?.contents
+        ? scriptContent.contents.map(line => `${line.speakerName}: ${line.content}`).join('\n\n')
+        : '';
 
       const newPodcast: PodcastItem = {
         id: Date.now().toString(),
@@ -756,6 +782,7 @@ export default function Dashboard() {
       setStep(1)
       setScriptContent(null)
       setEditableScript('')
+      setIsPaid(false) // Reset payment status for next generation
     } catch (error) {
       console.error('Audio generation failed:', error)
       setError('Audio generation failed, please try again later')
@@ -1258,7 +1285,7 @@ export default function Dashboard() {
                         onClick={handleGenerateAudio}
                         disabled={isGenerating || isGeneratingScript || !scriptContent}
                       >
-                        {isGenerating ? 'Generating...' : 'Generate Podcast Audio'}
+                        {isGenerating ? 'Generating...' : isPaid ? 'Generate Podcast Audio' : `Generate`}
                       </Button>
                     </div>
                   </div>
@@ -1470,6 +1497,14 @@ export default function Dashboard() {
           </div>
         </div>
       )}
+      
+      {/* Payment Modal */}
+      <PaymentModal
+        isOpen={showPaymentModal}
+        onClose={() => setShowPaymentModal(false)}
+        onPaymentSuccess={handlePaymentSuccess}
+        amount={paymentAmount}
+      />
     </div>
   )
-} 
+}
